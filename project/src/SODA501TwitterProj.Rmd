@@ -5,9 +5,6 @@ date: "2018/2/19"
 output: html_document
 ---
 
-#This is Shipi testing again :)
-###This is Shipi testing
-###This is Xiaoran testing on 2-26
 ##This is to read in the text file and write into json file
 ###Test on the sample data "xja.txt" first
 ```{r}
@@ -57,3 +54,21 @@ cat(toJSON(tweets.df), file = 'alltweet.json')
 #delete lines of json file using the following line in the terminal
 # sed '200000d' fileName.txt
 ```
+
+#Week 2-26: select tweets from college towns
+Try out on the sample file first
+```{r}
+tweets_sample.df<-stream_in(file("xja.txt"))
+#selecting by college towns
+towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence, KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO", "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+##I scanned through the place names by grepping those Satets and revised the town names a bit to make those match what are displayed in the dataset (e.g., changing Champaign-Urbana, IL to Champaign, IL)
+tweets_sample.selected<-tweets_sample.df[grep(paste(towns,collapse="|"), tweets_sample.df$place$full_name),]
+
+##checking whether the selection works
+tweets_sample.selected$place$full_name #working
+
+##save the selected tweets
+cat(toJSON(tweets_sample.selected), file = 'tweets_sample_selected.txt') 
+```
+
+To run it on the whole dataset, just change the 'xja.txt' into the name of the whole data file
