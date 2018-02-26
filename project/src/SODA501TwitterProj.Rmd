@@ -11,15 +11,20 @@ output: html_document
 ##This is to read in the text file and write into json file
 ###Test on the sample data "xja.txt" first
 ```{r}
-#setwd("~/Desktop/paper/SODA501") #set wherever your data directory is
-#install.packages("jsonlite")  #you need to install the jsonlite package to run these codes
+#set wherever your data directory is
+#setwd("~/Desktop/paper/SODA501") 
+setwd("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501/project/data")
+
 library(jsonlite)
+
+#read in text data
 tweets_sample.df<-stream_in(file("xja.txt"))
-#head(tweets_sample.df)
-#str(tweets_sample.df)
-#names(tweets_sample.df)
-#str(tweets_sample.df$text)
-###you can de-comment the commands above to see what the json structure looks like###
+
+#look at json structure
+head(tweets_sample.df)
+str(tweets_sample.df)
+names(tweets_sample.df)
+tr(tweets_sample.df$text)
 
 #also for geo-location, it is stored in:
 ##tweets_sample.df$coordinates
