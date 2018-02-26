@@ -5,6 +5,7 @@ date: "2018/2/19"
 output: html_document
 ---
 ###This is Shipi testing
+###This is Xiaoran testing on 2-26
 ##This is to read in the text file and write into json file
 ###Test on the sample data "xja.txt" first
 ```{r}
