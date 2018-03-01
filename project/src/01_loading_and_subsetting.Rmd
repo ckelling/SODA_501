@@ -78,10 +78,10 @@ tweets_sample.selected$place$full_name #working
 #cat(toJSON(tweets_sample.selected), file = 'tweets_sample_selected.txt') 
 
 #collect all of the id's that are in these college towns
-id_college <- unique(tweets_sample.selected$id)
+id_college <- unique(tweets_sample.selected$user$id)
 
 #get a subset of the data based on these id's
-coll_town_user_tweets <- tweets_sample.df[which(tweets_sample.df$id %in% id_college),]
+coll_town_user_tweets <- tweets_sample.df[which(tweets_sample.df$user$id %in% id_college),]
 
 
 #with this step, we will have a dataset of all of the twitter users that have ever posted in a college town

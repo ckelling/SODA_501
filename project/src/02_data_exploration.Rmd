@@ -1,0 +1,91 @@
+---
+title: "SODA501TwitterProj"
+author: "Claire Kelling and Xiaoran Sun"
+date: "2018/2/19"
+output: html_document
+---
+
+##This is to read in the text file and write into json file
+###Test on the sample data "xja.txt" first
+```{r}
+#set wherever your data directory is
+#setwd("~/Desktop/paper/SODA501") #Xiaoran
+setwd("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501/project/data") #Claire
+
+library(jsonlite)
+
+#read in text data
+tweets_sample.df<-stream_in(file("xja.txt"))
+
+#look at json structure
+head(tweets_sample.df)
+str(tweets_sample.df)
+names(tweets_sample.df)
+tr(tweets_sample.df$text)
+
+#Geo-location is stored in:
+##tweets_sample.df$coordinates
+
+#to check the coordinate of user 1:
+tweets_sample.df$coordinates[1,]
+#to check the place where user 1 is:
+tweets_sample.df$place[1,]
+#to check the name or full name of the town:
+tweets_sample.df$place[1,] $name
+tweets_sample.df$place[1,] $full_name
+
+#Then we want to export the data as JSON file
+cat(toJSON(tweets_sample.df), file = 'sampletweet.json') #good
+```
+
+Therefore, to run the whole datafile on cloud/cluster, the codes that we would need:
+```{r}
+#to run on the cluster: 
+
+#setwd("/storage/home/cek32/work/soda_project")
+library(jsonlite)
+tweets.df<-stream_in(file("tweets_2015_dec_usa.txt"))
+
+
+#update on 2-22 when stream_in hit error
+#try this instead using this ndjson package:
+tweets.df<-ndjson::stream_in("tweets_2015_dec_usa.txt")
+cat(toJSON(tweets.df), file = 'alltweet.json') 
+
+#There are errors when reading the full file on the cluster:
+#      between rows 2822000 and 2822500
+#      delete lines of json file using the following line in the terminal
+#      sed '200000d' fileName.txt
+```
+
+#Week 2-26: select tweets from college towns
+Try out on the sample file first
+```{r}
+tweets_sample.df<-stream_in(file("xja.txt"))
+#selecting by college towns
+towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence,
+         KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
+         "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+
+##I scanned through the place names by grepping those Satets and revised the town names a bit to make those match what are displayed in the dataset (e.g., changing Champaign-Urbana, IL to Champaign, IL)
+tweets_sample.selected<-tweets_sample.df[grep(paste(towns,collapse="|"),
+                                              tweets_sample.df$place$full_name),]
+
+##checking whether the selection works
+tweets_sample.selected$place$full_name #working
+
+##save the selected tweets
+#cat(toJSON(tweets_sample.selected), file = 'tweets_sample_selected.txt') 
+
+#collect all of the id's that are in these college towns
+id_college <- unique(tweets_sample.selected$user$id)
+
+#get a subset of the data based on these id's
+coll_town_user_tweets <- tweets_sample.df[which(tweets_sample.df$user$id %in% id_college),]
+
+
+#with this step, we will have a dataset of all of the twitter users that have ever posted in a college town
+save(coll_town_user_tweets, file = "/storage/home/cek32/work/soda_project/coll_town_tweets.Rdata")
+```
+
+To run it on the whole dataset, just change the 'xja.txt' into the name of the whole data file
