@@ -10,6 +10,10 @@ output: html_document
 #set wherever your data directory is
 #setwd("~/Desktop/paper/SODA501") #Xiaoran
 setwd("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501/project/data") #Claire
+library(sp)
+library(ggplot2)
+library(ggmap)
+library(dplyr)
 
 load(file = "coll_town_tweets.Rdata")
 
@@ -26,3 +30,123 @@ Some details about the dataset:
 * There are 197,490 tweets in our dataset.
 * There are 1606 users that have at some point tweeted in college towns.
 * There are 7166 tweets that were tweeted in a college town.
+
+Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
+```{r}
+first_user_id <- tweets_in_college_town[2,]
+first_user_id2 <- first_user_id$user$id
+
+first_user_tweets <- coll_town_user_tweets[which(coll_town_user_tweets$user$id == first_user_id2),]
+#he has 20 tweets
+unique(first_user_tweets$place$name)
+
+places_first_user <- unique(first_user_tweets$place) # he went to 3 places
+coords_first_user <- as.data.frame(first_user_tweets$coordinates$coordinates) # coordinates
+coords_first_user <- as.data.frame(t(as.matrix(coords_first_user)))
+colnames(coords_first_user) <- c("Long", "Lat")
+rownames(coords_first_user) <- c()
+
+#converting to spatial points, may use this later
+## coordinates(coords_first_user) <- cbind(coords_first_user$Long, coords_first_user$Lat)
+## proj4string(coords_first_user) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+#PA_Map <- qmap('pennsylvania', legend = 'topleft')
+
+us <- map_data("state")
+
+arr <- USArrests %>% 
+  add_rownames("region") %>% 
+  mutate(region=tolower(region))
+
+gg <- ggplot()
+gg <- gg + #geom_map(data=us, map=us,
+                    #aes(x=long, y=lat, map_id=region),
+                    #fill="#ffffff", color="#ffffff", size=0.15)+ 
+  geom_point(aes(x = Long, y = Lat), data = coords_first_user)+
+  geom_path(data=coords_first_user, aes(x=Long, y=Lat), color="black", size=1)
+#cannot see when including map
+
+```
+
+Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
+```{r}
+first_user_id <- tweets_in_college_town[4,]
+first_user_id2 <- first_user_id$user$id
+
+first_user_tweets <- coll_town_user_tweets[which(coll_town_user_tweets$user$id == first_user_id2),]
+unique(first_user_tweets$place$name)
+
+places_first_user <- unique(first_user_tweets$place) # he went to 3 places
+coords_first_user <- as.data.frame(first_user_tweets$coordinates$coordinates) # coordinates
+coords_first_user <- as.data.frame(t(as.matrix(coords_first_user)))
+colnames(coords_first_user) <- c("Long", "Lat")
+rownames(coords_first_user) <- c()
+
+
+gg <- ggplot()
+gg <- gg + geom_map(data=us, map=us,
+                    aes(x=long, y=lat, map_id=region),
+                    fill="#ffffff", color="#ffffff", size=0.15)+ 
+  geom_point(aes(x = Long, y = Lat), data = coords_first_user)+
+  geom_path(data=coords_first_user, aes(x=Long, y=Lat), color="black", size=1)
+gg
+
+#This is almost certainly a college person going home to NOVA from Blacksburg!
+```
+
+
+Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
+```{r}
+
+full_df <- NULL
+j <- 0
+for(i in unique(coll_town_user_tweets$user$id)){
+  #i<- coll_town_user_tweets$user$id[1] #testing
+  user_tweets <- coll_town_user_tweets[which(coll_town_user_tweets$user$id == i),]
+  num_places <- length(unique(user_tweets$place$name))
+  
+  #I'd like to find the college town that is affilliated with each user
+  tweets_ctown<-user_tweets[grep(paste(towns,collapse="|"),
+                                              user_tweets$place$full_name),]
+  coll_town <- unique(tweets_ctown$place$name)
+  
+  if(num_places < 20){ #filter for the number of unique places in these days
+    coords_user <- as.data.frame(user_tweets$coordinates$coordinates) # coordinates
+    coords_user <- as.data.frame(t(as.matrix(coords_user)))
+    colnames(coords_user) <- c("Long", "Lat")
+    rownames(coords_user) <- c()
+    group <- rep(i, nrow(coords_user))
+    ctown <- rep(coll_town, nrow(coords_user))
+    coords_user <- cbind(coords_user, group, ctown)
+    
+    if(nrow(coords_user) < 100 & nrow(coords_user)>1){ # this is the filter for the number of tweets
+      full_df <- rbind(full_df, coords_user)
+    }
+  }
+  j <- j+1
+  print(j) #should get up to 1606
+  print(nrow(full_df)) 
+}
+#full_df <- full_df[1:2000,]
+full_df$group <-as.factor(full_df$group)
+full_df$ctown <-as.factor(full_df$ctown)
+
+gg_user <- ggplot()
+gg_user <- gg_user + geom_map(data=us, map=us,
+                    aes(x=long, y=lat, map_id=region),
+                    fill="#ffffff", color="#ffffff", size=0.15)+ 
+  #geom_point(aes(x = Long, y = Lat), data = full_df)+
+  geom_path(data=full_df, aes(x=Long, y=Lat, group = group, color= group), size=1)+
+  theme(legend.position="none")
+gg_user
+
+gg_ctown <- ggplot()
+gg_ctown <- gg_ctown + geom_map(data=us, map=us,
+                    aes(x=long, y=lat, map_id=region),
+                    fill="#ffffff", color="#ffffff", size=0.15)+ 
+  #geom_point(aes(x = Long, y = Lat), data = full_df)+
+  geom_path(data=full_df, aes(x=Long, y=Lat, group = ctown, color= ctown), size=1)+
+  facet_grid(~ ctown) #+ theme(legend.position="none")
+gg_ctown
+
+unique(full_df$ctown)
+```
