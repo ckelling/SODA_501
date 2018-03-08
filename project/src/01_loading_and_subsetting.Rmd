@@ -1,5 +1,5 @@
 ---
-title: "SODA501TwitterProj"
+title: "Loading and Subsetting data"
 author: "Claire Kelling and Xiaoran Sun"
 date: "2018/2/19"
 output: html_document
