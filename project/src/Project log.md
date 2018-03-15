@@ -20,4 +20,4 @@ Install.sh working, but classifer not running because of setup issues. We have n
 * Why college towns? Why not using the whole dataset?
 ## Things we may need to discuss:
 * Do we still want to keep the college towns direction? If so, we may want to identify the students Twitter users using, for example, the profile information of the users.
-* Or do we want to take a step back and look at ALL of the data? We can downsize the data by subsetting the VARIABLES (instead of users). For example, we just need the tweet id, the user id, the location and coordinates of the tweets.
+* Or do we want to take a step back and look at ALL of the data? We can downsize the data by subsetting the VARIABLES (instead of users). For example, we just need the tweet id, the user id, the location and coordinates of the tweets (and maybe also the followers & friends count, the content of the tweet, the user profile to identify non-human vs. human users).
