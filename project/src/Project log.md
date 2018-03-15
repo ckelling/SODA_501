@@ -13,3 +13,11 @@ Install.sh working, but classifer not running because of setup issues. We have n
 (or can just show Xiaoran how to run codes on Penn State Cluster, i.e., running R codes on Terminal)
 * based on the selected tweets, write codes for selecting other tweets that came from the same Twitter users 
 (maybe Shipi and So Young can help with this!)
+
+# Week March 15:
+## Burt's comments:
+* What is the population that we want to focus on?
+* Why college towns? Why not using the whole dataset?
+## Things we may need to discuss:
+* Do we still want to keep the college towns direction? If so, we may want to identify the students Twitter users using, for example, the profile information of the users.
+* Or do we want to take a step back and look at ALL of the data? We can downsize the data by subsetting the VARIABLES (instead of users). For example, we just need the tweet id, the user id, the location and coordinates of the tweets (and maybe also the followers & friends count, the content of the tweet, the user profile to identify non-human vs. human users).
