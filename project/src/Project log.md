@@ -21,3 +21,6 @@ Install.sh working, but classifer not running because of setup issues. We have n
 ## Things we may need to discuss:
 * Do we still want to keep the college towns direction? If so, we may want to identify the students Twitter users using, for example, the profile information of the users.
 * Or do we want to take a step back and look at ALL of the data? We can downsize the data by subsetting the VARIABLES (instead of users). For example, we just need the tweet id, the user id, the location and coordinates of the tweets (and maybe also the followers & friends count, the content of the tweet, the user profile to identify non-human vs. human users).
+* For reference: college by enrollment - https://nces.ed.gov/fastfacts/display.asp?id=74
+                                       - http://www.stateuniversity.com/rank/tot_enroll_rank.html
+                                       - https://en.wikipedia.org/wiki/List_of_United_States_university_campuses_by_enrollment
