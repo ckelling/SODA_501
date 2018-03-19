@@ -28,3 +28,8 @@ https://en.wikipedia.org/wiki/List_of_United_States_university_campuses_by_enrol
 * We may be able to stick to the college town data. What we need to do is to provide stronger rationale for doing that.
 * We can also peform same prodecure to the big city users. And compare the flow for college towns to that of big cities.
 * (also random thoughts by Xiaoran) Maybe we can just conduct analysis on people traveling IN and OUT of the towns and cities. See what the directions of the flow are during holiday season. For example, I'm interested in the question: Do people tend to travel into or out of college towns? When are the in- and out-flow tend to happen (pre- or post-Christmas)? Maybe we will get different answers for the college towns and the big cities.
+
+#Week of Mar19
+Shipi
+Found an API, called Botcheck. It is not really checking if the tweet is organization butchecks for tweet being a bot. It returns a probablity of an account being a bot. 
+more info here: https://github.com/marsha5813/botcheck
