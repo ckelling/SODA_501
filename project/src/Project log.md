@@ -1,7 +1,7 @@
-This file is to keep track of our progress and tasks ever week.
+This file is to keep track of our progress and tasks every week.
 
 #Week of Feb 19
-##Shipi - Humanizr 
+## Shipi - Humanizr 
 Install.sh working, but classifer not running because of setup issues. 
 We have now decided to change direction. 
 We will now subset the dataset to number of tweets from college towns. 
@@ -52,10 +52,23 @@ This will make the twitter dataset manageable. Currently the dataset is 13.4 GB.
 	Maybe we will get different answers for the college towns and the big cities.
 
 #Week of Mar19
-Shipi
+## Shipi
 Found an API, called Botcheck. 
 	It is not really checking if the tweet is organization butchecks for tweet being a bot. 
 	It returns a probablity of an account being a bot. 
 	More info here: https://github.com/marsha5813/botcheck
-
+## So Young:
+Received comment from Dr. Pan regarding the rationale for choosing college town. Have been documenting studies for the literature review. I am still unable to find any study that looked at holiday season travel. If everyone is willing and if we can develop this further, I think we have a chance at publishing. As Xiaolan mentioned aboutur paper can provide insight into 1.understanding in- and out-flows during Christmas season, and 2. identifying VFR (visiting friends and relatives) tourists, focusing mostly on college students.
+E.g. 
+* One paper that looked at holiday migration (but focuesd on urban heat island, examined temperature rather than movement): Zhang, J., Wu, L., Yuan, F., Dou, J., & Miao, S. (2015). Mass human migration and Beijing’s urban heat island during the Chinese New Year holiday. Science bulletin, 60(11), 1038-1041.
+* One paper that looked at college student travel: Erdogan, M., & Açikalin, S. (2015). Comparing factors affecting intra and inter-city travel mode choice of university students 1. Tüketici Ve Tüketim Araştırmaları Dergisi = Journal of Consumer and Consumption Research, 7(2), 1-18. 
+* Rationale for studying movement initiating from college towns using Twitter data: Fotis, J., Buhalis, D., & Rossides, N. (2012). Social media use and impact during the holiday travel planning process (pp. 13-24). Springer-Verlag.
 TASKS TO DO:
+* The travel pattern we are looking at could also be categorized VFR:
+Bischoff, E. E., & Koenig‐Lewis, N. (2007). VFR tourism: The importance of university students as hosts. International Journal of Tourism Research, 9(6), 465-484.
+Backer, E. (2008). VFR Travellers–Visiting the destination or visiting the hosts. Asian Journal of Tourism and Hospitality Research, 2(1), 60-70.
+Griffin, T. (2013). Research note: A content analysis of articles on visiting friends and relatives tourism, 1990–2010. Journal of Hospitality Marketing & Management, 22(7), 781-802.
+Seaton, A. V., & Palmer, C. (1997). Understanding VFR tourism behaviour: the first five years of the United Kingdom tourism survey. Tourism management, 18(6), 345-355.
+* Reference for segmenting our Twitter users: 
+Becken, S., Simmons, D., & Frampton, C. (2003). Segmenting tourists by their travel pattern for insights into achieving energy efficiency. Journal of Travel Research, 42(1), 48-56.
+Cohen, E. (1974). Who is a tourist?: A conceptual clarification. The sociological review, 22(4), 527-555.
