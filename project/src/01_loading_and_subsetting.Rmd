@@ -21,7 +21,7 @@ tweets_sample.df<-stream_in(file("xja.txt"))
 head(tweets_sample.df)
 str(tweets_sample.df)
 names(tweets_sample.df)
-tr(tweets_sample.df$text)
+str(tweets_sample.df$text)
 
 #Geo-location is stored in:
 ##tweets_sample.df$coordinates
@@ -66,9 +66,12 @@ tweets_sample.df<-stream_in(file("xja.txt"))
 towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence,
          KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
          "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+cities<-c("Brooklyn, NY", "Brooklyn, NY","Queens, NY", "Manhattan, NY", "Bronx, NY", "Staten Island, NY", "Los Angeles, CA", "Westwood, CA", "Eagle Rock, CA", "Westchester, CA", "Chicago, IL", "Evanston, IL", "Boston, MA", "Cambridge, MA", "Medford, MA", "Chestnut Hill, MA", "Philadelphia, PA", "University City, PA", "Cecil B. Moore, PA", "Radnor Township, PA", "Miami, FL", "Coral Gables, FL", "Boca Raton, FL", "University Park, FL", "Richardson, FL", "Arlington, FL", "Washington, DC", "Georgetown, DC", "Fairfax, VA", "San Francisco, CA", "Berkeley, CA", "Houston, TX")
 
 ##I scanned through the place names by grepping those Satets and revised the town names a bit to make those match what are displayed in the dataset (e.g., changing Champaign-Urbana, IL to Champaign, IL)
 tweets_sample.selected<-tweets_sample.df[grep(paste(towns,collapse="|"),
+                                              tweets_sample.df$place$full_name),]
+tweets_sample.selected2<-tweets_sample.df[grep(paste(cities,collapse="|"),
                                               tweets_sample.df$place$full_name),]
 
 ##checking whether the selection works
@@ -79,13 +82,15 @@ tweets_sample.selected$place$full_name #working
 
 #collect all of the id's that are in these college towns
 id_college <- unique(tweets_sample.selected$user$id)
+id_city <- unique(tweets_sample.selected2$user$id)
 
 #get a subset of the data based on these id's
 coll_town_user_tweets <- tweets_sample.df[which(tweets_sample.df$user$id %in% id_college),]
-
+coll_city_user_tweets <- tweets_sample.df[which(tweets_sample.df$user$id %in% id_city),]
 
 #with this step, we will have a dataset of all of the twitter users that have ever posted in a college town
 save(coll_town_user_tweets, file = "/storage/home/cek32/work/soda_project/coll_town_tweets.Rdata")
+save(coll_city_user_tweets, file = "/storage/home/xbs5014/Downloads/coll_city_tweets.Rdata")
 ```
 
 To run it on the whole dataset, just change the 'xja.txt' into the name of the whole data file
