@@ -74,5 +74,5 @@ Becken, S., Simmons, D., & Frampton, C. (2003). Segmenting tourists by their tra
 Cohen, E. (1974). Who is a tourist?: A conceptual clarification. The sociological review, 22(4), 527-555.
 ## Xiaoran
 * Using Claire's code, run on Cluster to subset tweets from the 10 top big cities.\n
-** Note: The full names of the places in the Twitter dataset are the exact *region* names (e.g., Manhattan, Queens) but not the *city* names (e.g., New York City). Therefore, the list of the regions that I'm extracting are:
+	- Note: The full names of the places in the Twitter dataset are the exact *region* names (e.g., Manhattan, Queens) but not the *city* names (e.g., New York City). Therefore, the list of the regions that I'm extracting are:
 * After figuring out the cutoffs and deleting bot tweets, can start to write codes for selecting in- and out-flows for the two Rdataset.
