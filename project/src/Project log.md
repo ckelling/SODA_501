@@ -101,10 +101,10 @@ TASKS TO DO:
 ## Shipi
 Added a file 03_botcheck.R in master. 
 
-Input to the function is a twittername without the @ symbol. Some examples I ran are shown below:
--botcheck("barackobama") #  #returns 0.64
--botcheck("McDonalds")   #0.62
--botcheck("BurgerKing") #0.5
+Input to the function is a twittername without the @ symbol. Some examples I ran are shown below:\n
+-botcheck("barackobama") #  #returns 0.64\n
+-botcheck("McDonalds")   #0.62\n
+-botcheck("BurgerKing") #0.5\n
 -botcheck("xiaoransunpsu") #0.32
 
-#The value returned is the english score from the json object that the Botometer API returns. A higher value indicates a higher chance of being a bot. 
+The value returned is the english score from the json object that the Botometer API returns. A higher value indicates a higher chance of being a bot. 
