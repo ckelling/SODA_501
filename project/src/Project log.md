@@ -114,7 +114,7 @@ The value returned is the english score from the json object that the Botometer 
 ## Xiaoran
 * Ran the subsetting codes again on Cluster using the entire whole raw Twitter data (the whole 13.4GB file with no broken lines)
 * Descriptives of the data are as following:
-	- College *tonws* tweets:
+	- College *towns* tweets:
 		- 11786 tweets tagged with any of those college towns
 		- 2234 users identified
 		- in total 346749 tweets of those users (stored in Rdata)
