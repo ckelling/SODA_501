@@ -13,13 +13,19 @@ load(coll_town_users.Rdata)
 
 ```{r}
 user_locations<-data.frame(user=coll_town_users, locations=NA, coords=NA, stringsAsFactors = FALSE)
-for (i in length(user_locations$user)){
+for (i in 1:length(user_locations$user)){
   user_temp<-user_locations$user[i]
   locations_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$full_name))
-  coords_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$bounding_box$coordinates))
+  coords_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$coordinates$coordinates))
   user_locations$locations[i]<-list(locations_temp)
   user_locations$coords[i]<-list(coords_temp)
 }
 
 save(user_locations, file = "/storage/home/xbs5014/work/user_locations.Rdata")
+```
+
+Question 1: What are the most popular places to travel outside college towns among travellers from/to each college town?
+```{r}
+#load("~/Desktop/paper/SODA501/project/user_locations.Rdata") #where Xiaoran's wd is
+
 ```
