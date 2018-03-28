@@ -107,12 +107,14 @@ Input to the function is a twittername without the @ symbol. Some examples I ran
 -botcheck("BurgerKing") #0.5\n
 -botcheck("xiaoransunpsu") #0.32
 
-The value returned is the english score from the json object that the Botometer API returns. A higher value indicates a higher chance of being a bot. 
+The value returned is the english score from the json object that the Botometer API returns. 
+A higher value indicates a higher chance of being a bot. 
 
 #week Mar26
 
 ## Xiaoran
-* Ran the subsetting codes again on Cluster using the entire whole raw Twitter data (the whole 13.4GB file with no broken lines)
+* Ran the subsetting codes again on Cluster using the entire whole raw Twitter data 
+	(the whole 13.4GB file with no broken lines)
 * Descriptives of the data are as following:
 	- College *towns* tweets:
 		- 11786 tweets tagged with any of those college towns
