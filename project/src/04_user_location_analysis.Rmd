@@ -5,26 +5,21 @@ date: "2018/3/28"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+setwd("/storage/home/xbs5014/work") #Xiaoran's path on cluster
+load(coll_town_tweets.Rdata)
+load(coll_town_users.Rdata)
 ```
 
-## R Markdown
+```{r}
+user_locations<-data.frame(user=coll_town_users, locations=NA, coords=NA, stringsAsFactors = FALSE)
+for (i in length(user_locations$user)){
+  user_temp<-user_locations$user[i]
+  locations_temp<-c(unique(coll_town_tweets[coll_town_tweets$user$screen_name==user_temp,]$place$full_name))
+  coords_temp<-c(unique(coll_town_tweets[coll_town_tweets$user$screen_name==user_temp,]$place$bounding_box$coordinates))
+  user_locations$locations[i]<-list(locations_temp)
+  user_locations$coords[i]<-list(coords_temp)
+}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+save(user_locations, file = "/storage/home/xbs5014/work/user_locations.Rdata")
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
