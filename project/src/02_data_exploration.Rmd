@@ -27,9 +27,9 @@ tweets_in_college_town<-coll_town_user_tweets[grep(paste(towns,collapse="|"),
 ```
 
 Some details about the dataset:
-* There are 197,490 tweets in our dataset.
-* There are 1606 users that have at some point tweeted in college towns.
-* There are 7166 tweets that were tweeted in a college town.
+* There are 346,749 tweets in our dataset.
+* There are 2234 users that have at some point tweeted in college towns.
+* There are 11,786 tweets that were tweeted in a college town.
 
 Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
 ```{r}
