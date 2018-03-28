@@ -107,14 +107,12 @@ Input to the function is a twittername without the @ symbol. Some examples I ran
 -botcheck("BurgerKing") #0.5\n
 -botcheck("xiaoransunpsu") #0.32
 
-The value returned is the english score from the json object that the Botometer API returns. 
-A higher value indicates a higher chance of being a bot. 
+The value returned is the english score from the json object that the Botometer API returns. A higher value indicates a higher chance of being a bot. 
 
 #week Mar26
 
 ## Xiaoran
-* Ran the subsetting codes again on Cluster using the entire whole raw Twitter data 
-	(the whole 13.4GB file with no broken lines)
+* Ran the subsetting codes again on Cluster using the entire whole raw Twitter data (the whole 13.4GB file with no broken lines)
 * Descriptives of the data are as following:
 	- College *towns* tweets:
 		- 11786 tweets tagged with any of those college towns
@@ -124,3 +122,6 @@ A higher value indicates a higher chance of being a bot.
 		- 690466 tweets tagged with any of those college towns
 		- 113526 users identified
 		- in total 1681450 tweets of those users (stored in Rdata)
+
+## So Young
+* "Geo-located Twitter as proxy for global mobility patterns" (https://www.tandfonline.com/doi/pdf/10.1080/15230406.2014.890072?needAccess=true) This paper could provide some insight for threshold. What the paper examined all the consecutive locations of a single user and excluded those that implied a user relocating with a speed over 1000 km/h, i.e., faster than a passenger plane. Also, it elimiated advertisements and promotions based on tweet popularity.
