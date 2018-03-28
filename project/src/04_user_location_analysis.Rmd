@@ -15,8 +15,8 @@ load(coll_town_users.Rdata)
 user_locations<-data.frame(user=coll_town_users, locations=NA, coords=NA, stringsAsFactors = FALSE)
 for (i in length(user_locations$user)){
   user_temp<-user_locations$user[i]
-  locations_temp<-c(unique(coll_town_tweets[coll_town_tweets$user$screen_name==user_temp,]$place$full_name))
-  coords_temp<-c(unique(coll_town_tweets[coll_town_tweets$user$screen_name==user_temp,]$place$bounding_box$coordinates))
+  locations_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$full_name))
+  coords_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$bounding_box$coordinates))
   user_locations$locations[i]<-list(locations_temp)
   user_locations$coords[i]<-list(coords_temp)
 }
