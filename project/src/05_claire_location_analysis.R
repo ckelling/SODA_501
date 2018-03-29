@@ -129,5 +129,11 @@ for(j in 411:nrow(user_locations)){
 
 #only ?? users have less than 50 locations
 nrow(full_dat)
+colnames(full_dat) <- c("coll_loc", "max_loc", "max_dist", "dist_trav")
+rownames(full_dat) <- c()
 
 #issues with exceeding daily requested number
+mean_max <- aggregate(. ~ coll_loc, d[-2], mean)
+mean_tot <- aggregate(. ~ coll_loc, d[-1], mean)
+
+common_dest <- count(x, c('coll_loc','max_loc'))
