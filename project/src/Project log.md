@@ -1,4 +1,4 @@
-﻿This file is to keep track of our progress and tasks every week.
+This file is to keep track of our progress and tasks every week.
 
 #Week of Feb 19
 ## Shipi - Humanizr 
@@ -125,3 +125,7 @@ The value returned is the english score from the json object that the Botometer 
 
 ## So Young
 * "Geo-located Twitter as proxy for global mobility patterns" (https://www.tandfonline.com/doi/pdf/10.1080/15230406.2014.890072?needAccess=true) This paper could provide some insight for threshold. What the paper examined all the consecutive locations of a single user and excluded those that implied a user relocating with a speed over 1000 km/h, i.e., faster than a passenger plane. Also, it elimiated advertisements and promotions based on tweet popularity.
+
+## April 2nd
+## Shipi 
+* All users in coll_town_users.Rdata run through bot checker. Uploaded the Rdata file for the results in Box folder shared by Xiaoran earlier.Value of -10 in the probability indicates that NULL was returned. There were 486 null values returned. So, we have probabilities of 2235 - 486 = 1749 users. Also, created a quick barplot to visualize frequencies of the probabilities that is uploaded in src as well. 
