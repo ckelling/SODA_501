@@ -1,0 +1,59 @@
+---
+title: "04_user_location_analysis"
+author: "Xiaoran Sun and Claire Kelling"
+date: "2018/3/28"
+output: html_document
+---
+
+```{r}
+setwd("/storage/home/xbs5014/work") #Xiaoran's path on cluster
+load(coll_town_tweets.Rdata)
+load(coll_town_users.Rdata)
+```
+
+```{r}
+user_locations<-data.frame(user=coll_town_users, locations=NA, coords=NA, stringsAsFactors = FALSE)
+for (i in 1:length(user_locations$user)){
+  user_temp<-user_locations$user[i]
+  locations_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$full_name))
+  coords_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$coordinates$coordinates))
+  user_locations$locations[i]<-list(locations_temp)
+  user_locations$coords[i]<-list(coords_temp)
+}
+
+save(user_locations, file = "/storage/home/xbs5014/work/user_locations.Rdata")
+```
+
+Question 1: What are the most popular places to travel outside college towns among travellers from/to each college town?
+```{r}
+#load("~/Desktop/paper/SODA501/project/user_locations.Rdata") #where Xiaoran's wd is
+#examine for State College first
+town<-"State College, PA"
+SCusers<-user_locations[grepl(town, user_locations$locations),]
+
+#without the botcheck, just exploring in the locations of users who traveled to less than *10* places
+SCusers_all_locations<-c("")
+for(i in 1:308){
+  if(length(SCusers$locations[[i]])<11){
+    SCusers_all_locations<-c(SCusers_all_locations, SCusers$locations[[i]])
+  }
+}
+
+SCusers_all_locations<-SCusers_all_locations[-1]
+sort(table(SCusers_all_locations),decreasing = TRUE) #so we can know the most frequent *places*
+
+#Then examine the most frequent *states*
+##I would like to get rid of locations in the list that include: "State College, PA", "Pennsylvania, USA", "Park Forest Village, PA", "Bellefonte, PA", and "Boalsburg, PA" --> these places are too close (or too vague) to State College that I wouldn't consider as "traveling"
+#-> but maybe we need to discuss about this
+
+remove_places<-c("State College, PA", "Pennsylvania, USA", "Park Forest Village, PA", "Bellefonte, PA", "Boalsburg, PA")
+SCusers_locations_c<-SCusers_all_locations[! SCusers_all_locations%in% remove_places]
+sort(table(SCusers_locations_c),decreasing = TRUE)
+
+sub("^[^,]*", "", SCusers_locations_c)
+
+SC_states<-substring(SCusers_locations_c, regexpr(",", SCusers_locations_c) + 2)
+sort(table(SC_states),decreasing = TRUE) #most common seen states: PA, FL, NY, MD, NJ
+#Thoughts: then maybe we can compare these states to the enrollment data to see what else has been contributing to holiday travels other than students going home (e.g., vacation travel etc.)
+
+```

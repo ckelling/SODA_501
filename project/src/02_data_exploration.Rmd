@@ -27,9 +27,9 @@ tweets_in_college_town<-coll_town_user_tweets[grep(paste(towns,collapse="|"),
 ```
 
 Some details about the dataset:
-* There are 197,490 tweets in our dataset.
-* There are 1606 users that have at some point tweeted in college towns.
-* There are 7166 tweets that were tweeted in a college town.
+* There are 346,749 tweets in our dataset.
+* There are 2234 users that have at some point tweeted in college towns.
+* There are 11,786 tweets that were tweeted in a college town.
 
 Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
 ```{r}
@@ -67,7 +67,7 @@ gg <- gg + #geom_map(data=us, map=us,
 
 ```
 
-Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
+Now, I would like to implement this for a different user.
 ```{r}
 first_user_id <- tweets_in_college_town[4,]
 first_user_id2 <- first_user_id$user$id
@@ -94,7 +94,7 @@ gg
 ```
 
 
-Now, I would like to see where a given user is tweeting. I will just try to perform this analysis for one user, to start.
+Now, I would like to see where each user is tweeting. I will perform this analysis for the full dataset.
 ```{r}
 
 full_df <- NULL
@@ -123,7 +123,7 @@ for(i in unique(coll_town_user_tweets$user$id)){
     }
   }
   j <- j+1
-  print(j) #should get up to 1606
+  print(j) #should get up to 2234
   print(nrow(full_df)) 
 }
 #full_df <- full_df[1:2000,]
