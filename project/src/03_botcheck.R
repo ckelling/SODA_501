@@ -39,3 +39,18 @@ botcheck("xiaoransunpsu") #0.32
 
 #The value returned is the english score from the json object that the Botometer API returns. A higher value indicates a higher chance of being a bot. 
 
+load("coll_town_users.Rdata")
+View(coll_town_users)
+class(coll_town_users)[1]
+coll_town_users[2]
+num.coll.town.users=length(coll_town_users)
+prob.bot = vector(mode = "numeric",length = num.coll.town.users)
+
+for(i in 2101:2235){
+    if(is.null(botcheck(coll_town_users[i]))){
+        prob.bot[i] = -10
+    }
+    else{
+        prob.bot[i] = botcheck(coll_town_users[i])
+    }
+}
