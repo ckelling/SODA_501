@@ -27,6 +27,12 @@ save(user_locations, file = "/storage/home/xbs5014/work/user_locations.Rdata")
 Question 1: What are the most popular places to travel outside college towns among travellers from/to each college town?
 ```{r}
 #load("~/Desktop/paper/SODA501/project/user_locations.Rdata") #where Xiaoran's wd is
+load("~/Desktop/paper/SODA501/project/user_locations.Rdata")
+user_locations_c<-cbind(user_locations, prob.bot.df)
+user_locations_cleaned<-user_locations_c[!is.na(user_locations_c$probab)&(user_locations_c$probab<=.59),]
+save(user_locations_cleaned, file = "~/Desktop/paper/SODA501/project/user_locations_botcleaned.Rdata")
+user_locations_c2<-user_locations_cleaned[which(length(user_locations_cleaned$locations)<=25)]
+
 #examine for State College first
 town<-"State College, PA"
 SCusers<-user_locations[grepl(town, user_locations$locations),]
