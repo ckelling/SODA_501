@@ -70,7 +70,7 @@ rm(list = coll_ind, i, dist_vec, max_dist, max_loc, new_dat,
 ###
 full_dat <- NULL
 for(j in 411:nrow(user_locations)){
-  j <- 410
+  #j <- 410
   user_towns <- user_locations$locations[[j]]
   
   print(paste(j, "****************************************"))
