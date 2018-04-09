@@ -3,6 +3,8 @@
 Below there is a brief description of all of the code files found in this folder.
 
 ## 00_geo_dist_function.R
+This file includes a function to measure distance between two lat/lon points.
+From the following website: https://eurekastatistics.com/calculating-a-distance-matrix-for-geographic-points-using-r/
 
 ## 01_loading_and_subsetting.R
 
