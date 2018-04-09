@@ -3,19 +3,22 @@ title: "Data Exploration"
 author: "Claire Kelling and Xiaoran Sun"
 date: "2018/3/1"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ##This is to read in and explore the subsetted data
 ```{r}
 #set wherever your data directory is
 #setwd("~/Desktop/paper/SODA501") #Xiaoran
-setwd("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501/project/data") #Claire
+setwd("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data") #Claire
 library(sp)
 library(ggplot2)
 library(ggmap)
 library(dplyr)
 
 load(file = "coll_town_tweets.Rdata")
+#load(file = "user_locations_finalcleaned.Rdata")
 
 length(unique(coll_town_user_tweets$user$id))
 
@@ -109,7 +112,7 @@ for(i in unique(coll_town_user_tweets$user$id)){
                                               user_tweets$place$full_name),]
   coll_town <- unique(tweets_ctown$place$name)
   
-  if(num_places < 20){ #filter for the number of unique places in these days
+  if(num_places < 25){ #filter for the number of unique places in these days
     coords_user <- as.data.frame(user_tweets$coordinates$coordinates) # coordinates
     coords_user <- as.data.frame(t(as.matrix(coords_user)))
     colnames(coords_user) <- c("Long", "Lat")
@@ -144,9 +147,9 @@ gg_ctown <- gg_ctown + geom_map(data=us, map=us,
                     aes(x=long, y=lat, map_id=region),
                     fill="#ffffff", color="#ffffff", size=0.15)+ 
   #geom_point(aes(x = Long, y = Lat), data = full_df)+
-  geom_path(data=full_df, aes(x=Long, y=Lat, group = ctown, color= ctown), size=1)+
-  facet_grid(~ ctown) #+ theme(legend.position="none")
-gg_ctown
+  geom_path(data=full_df, aes(x=Long, y=Lat, group = ctown, color= ctown), size=1, alpha = 0.4)+
+  facet_wrap(~ ctown, ncol = 3) #+ theme(legend.position="none")
+gg_ctown #save as 1000x750
 
 unique(full_df$ctown)
 ```
