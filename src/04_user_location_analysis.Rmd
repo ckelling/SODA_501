@@ -1,0 +1,243 @@
+---
+title: "04_user_location_analysis"
+author: "Xiaoran Sun and Claire Kelling"
+date: "2018/3/28"
+output: html_document
+---
+
+```{r}
+setwd("/storage/home/xbs5014/work") #Xiaoran's path on cluster
+load(coll_town_tweets.Rdata)
+load(coll_town_users.Rdata)
+```
+
+```{r}
+user_locations<-data.frame(user=coll_town_users, locations=NA, coords=NA, stringsAsFactors = FALSE)
+for (i in 1:length(user_locations$user)){
+  user_temp<-user_locations$user[i]
+  locations_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$full_name))
+  coords_temp<-c(unique(coll_town_user_tweets[coll_town_user_tweets$user$screen_name==user_temp,]$place$coordinates$coordinates))
+  user_locations$locations[i]<-list(locations_temp)
+  user_locations$coords[i]<-list(coords_temp)
+}
+
+save(user_locations, file = "/storage/home/xbs5014/work/user_locations.Rdata")
+```
+
+Clean bots (>.59) and users who have traveled to more than 25 unique locations
+```{r}
+#load("~/Desktop/paper/SODA501/project/user_locations.Rdata") #where Xiaoran's wd is
+load("~/Desktop/paper/SODA501/project/user_locations.Rdata")
+user_locations_c<-cbind(user_locations, prob.bot.df)
+user_locations_cleaned<-user_locations_c[!is.na(user_locations_c$probab)&(user_locations_c$probab<=.59),]
+save(user_locations_cleaned, file = "~/Desktop/paper/SODA501/project/user_locations_botcleaned.Rdata")
+user_locations_cleaned$location_num<-rep(NA,1578)
+for(i in 1:1578){
+  user_locations_cleaned$location_num[i]<-length(user_locations_cleaned$locations[[i]])
+}
+
+
+user_locations_c2<-user_locations_cleaned[user_locations_cleaned$location_num<=25,]
+summary(user_locations_c2$location_num)
+save(user_locations_c2, file = "~/Desktop/paper/SODA501/project/user_locations_finalcleaned.Rdata")
+```
+
+Descriptives: users in each college towns
+```{r}
+user_locations<-user_locations_c2
+towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence, KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
+         "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+Town_and_users<-data.frame(Town=towns, Number_of_Users_Extracted = rep(NA,10))
+for(j in 1:10){
+  town<-towns[j]
+  Town_and_users$Number_of_Users_Extracted[j]<-length(user_locations[grepl(town, user_locations$locations),]$user)
+}
+library(xtable)
+xtable(Town_and_users)
+
+```
+
+# Question 1: What are the most popular places to travel outside college towns among travellers from/to each college town?
+
+## State College
+```{r}
+town<-"State College, PA"
+SCusers<-user_locations[grepl(town, user_locations$locations),]
+
+SCusers_all_locations<-c("")
+for(i in 1:191){
+  
+    SCusers_all_locations<-c(SCusers_all_locations, SCusers$locations[[i]])
+  
+}
+
+SCusers_all_locations<-SCusers_all_locations[-1]
+t<-data.frame(sort(table(SCusers_all_locations),decreasing = TRUE)) #so we can know the most frequent *places*
+Top_10_Locations_for_Travel_State_College<-t[1:10,]
+names(Top_10_Locations_for_Travel_State_College)<-c("Top 10 locations for travelers to or from State College", "Number of users")
+xtable(Top_10_Locations_for_Travel_State_College)
+
+#Then examine the most frequent *states*
+##I would like to get rid of locations in the list that include: "State College, PA", "Pennsylvania, USA", "Park Forest Village, PA", "Bellefonte, PA", and "Boalsburg, PA" --> these places are too close (or too vague) to State College that I wouldn't consider as "traveling"
+#-> but maybe we need to discuss about this
+
+remove_places<-c("State College, PA", "Park Forest Village, PA",  "Boalsburg, PA")
+SCusers_locations_c<-SCusers_all_locations[! SCusers_all_locations%in% remove_places]
+
+SCusers_locations_c[grepl("USA",SCusers_locations_c)]
+SCusers_locations_c<-gsub("Pennsylvania, USA", "Unknown, PA", SCusers_locations_c)
+SCusers_locations_c<-gsub("South Carolina, USA", "Unknown, SC", SCusers_locations_c)
+SCusers_locations_c<-gsub("Virginia, USA", "Unknown, VA", SCusers_locations_c)
+SCusers_locations_c<-gsub("North Carolina, USA", "Unknown, NC", SCusers_locations_c)
+SCusers_locations_c<-gsub("Alabama, USA", "Unknown, AL", SCusers_locations_c)
+SCusers_locations_c<-gsub("Florida, USA", "Unknown, FL", SCusers_locations_c)
+SCusers_locations_c<-gsub("Texas, USA", "Unknown, TX", SCusers_locations_c)
+SCusers_locations_c<-gsub("New Jersey, USA", "Unknown, NJ", SCusers_locations_c)
+SCusers_locations_c<-gsub("Oklahoma, USA", "Unknown, OK", SCusers_locations_c)
+SCusers_locations_c<-gsub("Wisconsin, USA", "Unknown, WI", SCusers_locations_c)
+SCusers_locations_c<-gsub("Illinois, USA", "Unknown, IL", SCusers_locations_c)
+SCusers_locations_c<-gsub("Indiana, USA", "Unknown, IN", SCusers_locations_c)
+SCusers_locations_c<-gsub("Arizona, USA", "Unknown, AZ", SCusers_locations_c)
+SCusers_locations_c<-gsub("Ohio, USA", "Unknown, OH", SCusers_locations_c)
+SCusers_locations_c<-gsub("New Hampshire, USA", "Unknown, NH", SCusers_locations_c)
+SCusers_locations_c<-gsub("California, USA", "Unknown, CA", SCusers_locations_c)
+SCusers_locations_c<-gsub("Maryland, USA", "Unknown, MD", SCusers_locations_c)
+SCusers_locations_c<-gsub("New York, USA", "Unknown, NY", SCusers_locations_c)
+
+sub("^[^,]*", "", SCusers_locations_c)
+
+
+
+SC_states<-substring(SCusers_locations_c, regexpr(",", SCusers_locations_c) + 2)
+
+t<-data.frame(sort(table(SC_states),decreasing = TRUE) )
+
+Top_10_States_for_Travel_State_College<-t[1:10,]
+names(Top_10_States_for_Travel_State_College)<-c("Top 10 states for travelers to or from State College", "Number of users")
+xtable(Top_10_States_for_Travel_State_College)
+
+#most common seen states: PA, FL, NY, MD, NJ
+#Thoughts: then maybe we can compare these states to the enrollment data to see what else has been contributing to holiday travels other than students going home (e.g., vacation travel etc.)
+
+```
+
+## Blacksburg, VA
+```{r}
+town<-"Blacksburg, VA"
+BLusers<-user_locations[grepl(town, user_locations$locations),]
+
+BLusers_all_locations<-c("")
+for(i in 1:116){
+  
+    BLusers_all_locations<-c(BLusers_all_locations, BLusers$locations[[i]])
+  
+}
+
+BLusers_all_locations<-BLusers_all_locations[-1]
+t<-data.frame(sort(table(BLusers_all_locations),decreasing = TRUE)) #so we can know the most frequent *places*
+Top_10_Locations_for_Travel_Blacksburg<-t[1:10,]
+names(Top_10_Locations_for_Travel_Blacksburg)<-c("Top 10 locations for travelers to or from Blacksburg", "Number of users")
+xtable(Top_10_Locations_for_Travel_Blacksburg)
+
+#Then examine the most frequent *states*
+##I would like to get rid of locations in the list that include: "State College, PA", "Pennsylvania, USA", "Park Forest Village, PA", "Bellefonte, PA", and "Boalsburg, PA" --> these places are too close (or too vague) to State College that I wouldn't consider as "traveling"
+#-> but maybe we need to diBLuss about this
+
+remove_places<-c("Christiansburg, VA")
+BLusers_locations_c<-BLusers_all_locations[! BLusers_all_locations%in% remove_places]
+
+BLusers_locations_c[grepl("USA",BLusers_locations_c)]
+BLusers_locations_c<-gsub("Pennsylvania, USA", "Unknown, PA", BLusers_locations_c)
+BLusers_locations_c<-gsub("South Carolina, USA", "Unknown, BL", BLusers_locations_c)
+BLusers_locations_c<-gsub("Virginia, USA", "Unknown, VA", BLusers_locations_c)
+BLusers_locations_c<-gsub("North Carolina, USA", "Unknown, NC", BLusers_locations_c)
+BLusers_locations_c<-gsub("Alabama, USA", "Unknown, AL", BLusers_locations_c)
+BLusers_locations_c<-gsub("Florida, USA", "Unknown, FL", BLusers_locations_c)
+BLusers_locations_c<-gsub("Texas, USA", "Unknown, TX", BLusers_locations_c)
+BLusers_locations_c<-gsub("New Jersey, USA", "Unknown, NJ", BLusers_locations_c)
+BLusers_locations_c<-gsub("Oklahoma, USA", "Unknown, OK", BLusers_locations_c)
+BLusers_locations_c<-gsub("WiBLonsin, USA", "Unknown, WI", BLusers_locations_c)
+BLusers_locations_c<-gsub("Illinois, USA", "Unknown, IL", BLusers_locations_c)
+BLusers_locations_c<-gsub("Indiana, USA", "Unknown, IN", BLusers_locations_c)
+BLusers_locations_c<-gsub("Arizona, USA", "Unknown, AZ", BLusers_locations_c)
+BLusers_locations_c<-gsub("Ohio, USA", "Unknown, OH", BLusers_locations_c)
+BLusers_locations_c<-gsub("New Hampshire, USA", "Unknown, NH", BLusers_locations_c)
+BLusers_locations_c<-gsub("California, USA", "Unknown, CA", BLusers_locations_c)
+BLusers_locations_c<-gsub("Maryland, USA", "Unknown, MD", BLusers_locations_c)
+BLusers_locations_c<-gsub("New York, USA", "Unknown, NY", BLusers_locations_c)
+
+sub("^[^,]*", "", BLusers_locations_c)
+
+
+
+BL_states<-substring(BLusers_locations_c, regexpr(",", BLusers_locations_c) + 2)
+
+t<-data.frame(sort(table(BL_states),decreasing = TRUE) )
+
+Top_10_States_for_Travel_Blacksburg<-t[1:10,]
+names(Top_10_States_for_Travel_Blacksburg)<-c("Top 10 states for travelers to or from Blacksburg", "Number of users")
+xtable(Top_10_States_for_Travel_Blacksburg)
+
+
+```
+
+## College Station, TX
+```{r}
+town<-"College Station, TX"
+CSusers<-user_locations[grepl(town, user_locations$locations),]
+
+CSusers_all_locations<-c("")
+for(i in 1:271){
+  
+    CSusers_all_locations<-c(CSusers_all_locations, CSusers$locations[[i]])
+  
+}
+
+CSusers_all_locations<-CSusers_all_locations[-1]
+t<-data.frame(sort(table(CSusers_all_locations),decreasing = TRUE)) #so we can know the most frequent *places*
+Top_10_Locations_for_Travel_CS<-t[1:10,]
+names(Top_10_Locations_for_Travel_CS)<-c("Top 10 locations for travelers to or from College Station", "Number of users")
+xtable(Top_10_Locations_for_Travel_CS)
+
+remove_places<-c("Bryan, TX")
+CSusers_locations_c<-CSusers_all_locations[! CSusers_all_locations%in% remove_places]
+
+CSusers_locations_c[grepl("USA",CSusers_locations_c)]
+CSusers_locations_c<-gsub("Pennsylvania, USA", "Unknown, PA", CSusers_locations_c)
+CSusers_locations_c<-gsub("South Carolina, USA", "Unknown, CS", CSusers_locations_c)
+CSusers_locations_c<-gsub("Virginia, USA", "Unknown, VA", CSusers_locations_c)
+CSusers_locations_c<-gsub("North Carolina, USA", "Unknown, NC", CSusers_locations_c)
+CSusers_locations_c<-gsub("Alabama, USA", "Unknown, AL", CSusers_locations_c)
+CSusers_locations_c<-gsub("Florida, USA", "Unknown, FL", CSusers_locations_c)
+CSusers_locations_c<-gsub("Texas, USA", "Unknown, TX", CSusers_locations_c)
+CSusers_locations_c<-gsub("New Jersey, USA", "Unknown, NJ", CSusers_locations_c)
+CSusers_locations_c<-gsub("Oklahoma, USA", "Unknown, OK", CSusers_locations_c)
+CSusers_locations_c<-gsub("WiCSonsin, USA", "Unknown, WI", CSusers_locations_c)
+CSusers_locations_c<-gsub("Illinois, USA", "Unknown, IL", CSusers_locations_c)
+CSusers_locations_c<-gsub("Indiana, USA", "Unknown, IN", CSusers_locations_c)
+CSusers_locations_c<-gsub("Arizona, USA", "Unknown, AZ", CSusers_locations_c)
+CSusers_locations_c<-gsub("Ohio, USA", "Unknown, OH", CSusers_locations_c)
+CSusers_locations_c<-gsub("New Hampshire, USA", "Unknown, NH", CSusers_locations_c)
+CSusers_locations_c<-gsub("California, USA", "Unknown, CA", CSusers_locations_c)
+CSusers_locations_c<-gsub("Maryland, USA", "Unknown, MD", CSusers_locations_c)
+CSusers_locations_c<-gsub("New York, USA", "Unknown, NY", CSusers_locations_c)
+CSusers_locations_c<-gsub("Colorado, USA", "Unknown, CO", CSusers_locations_c)
+CSusers_locations_c<-gsub("Iowa, USA", "Unknown, IA", CSusers_locations_c)
+CSusers_locations_c<-gsub("New Mexico, USA", "Unknown, NM", CSusers_locations_c)
+CSusers_locations_c<-gsub("Kansas, USA", "Unknown, KS", CSusers_locations_c)
+CSusers_locations_c<-gsub("Wyoming, USA", "Unknown, WY", CSusers_locations_c)
+CSusers_locations_c<-gsub("Nebraska, USA", "Unknown, NE", CSusers_locations_c)
+sub("^[^,]*", "", CSusers_locations_c)
+
+
+
+CS_states<-substring(CSusers_locations_c, regexpr(",", CSusers_locations_c) + 2)
+
+t<-data.frame(sort(table(CS_states),decreasing = TRUE) )
+
+Top_10_States_for_Travel_CS<-t[1:10,]
+names(Top_10_States_for_Travel_CS)<-c("Top 10 states for travelers to or from College Station", "Number of users")
+xtable(Top_10_States_for_Travel_CS)
+
+
+```
