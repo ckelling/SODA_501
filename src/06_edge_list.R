@@ -15,8 +15,8 @@ library(googleway)
 library(xtable)
 library(dplyr)
 
-source("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/src/00_geo_dist_function.R")
-load("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/user_locations_finalcleaned.Rdata")
+source("~/Documents/GitHub/Travel_Patterns_SODA_501/src/00_geo_dist_function.R")
+load("~/Box Sync/2018 Spring/SoDA 501/FinalProject/user_locations_finalcleaned.Rdata")
 #I will use the subsetted data here
 user_locations <- user_locations_c2
 
@@ -61,11 +61,9 @@ agg_elist$dest <- as.character(agg_elist$dest)
 
 #now, to find the location between the two cities
 agg_elist$dist <- rep(NA,nrow(agg_elist))
-key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
+key <- "AIzaSyCO5lo0A7luxk2279rpBZ-QUrN_4NZqiyg"
 
-
-for(i in 1:length(agg_elist)){
-  #i=1
+for(i in 1:nrow(agg_elist)){
   towns <- agg_elist[i,1:2]
   lonlat1 <- google_geocode(address = towns[1,1], key = key)
   lonlat1 <- lonlat1$results$geometry$location
