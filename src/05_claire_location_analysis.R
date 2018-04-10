@@ -82,8 +82,8 @@ rm(list = coll_ind, i, dist_vec, max_dist, max_loc, new_dat,
 ### Now I will operationalize for the full dataset
 ###
 full_dat <- NULL
-for(j in 692:nrow(user_locations)){
-  #j <- 693
+for(j in 1161:nrow(user_locations)){
+  #j <- 1160
   user_towns <- user_locations$locations[[j]]
   
   #remove NA's
@@ -94,7 +94,7 @@ for(j in 692:nrow(user_locations)){
   if(length(user_towns) < 50){
     lonlat3 <- NULL
     for(i in 1:length(user_towns)){
-      #i=1
+      #i=2
       lonlat2 <- google_geocode(address = user_towns[i], key = key2)
       lonlat2 <- lonlat2$results$geometry$location
       print(i)
@@ -146,12 +146,15 @@ for(j in 692:nrow(user_locations)){
 
 #j needs to be up to 1518
 #full_dat_final <- NULL
-full_dat_final <- rbind(full_dat_final, full_dat) #done up to 691
-save(full_dat_final, file = "C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/coll_ind_dat.Rdata")
+#full_dat_final <- rbind(full_dat_final, full_dat) #done up to 1160
+#save(full_dat_final, file = "C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/coll_ind_dat.Rdata")
+#load(file = "C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/coll_ind_dat.Rdata")
+
 
 #got up to j as 74
-full_dat2 <- full_dat
-
+full_dat2 <- full_dat_final
+#full_dat_final <- full_dat2
+full_dat2 <- full_dat2[-c(169,176),]
 
 nrow(full_dat2)
 full_dat2 <- as.data.frame(full_dat2)
@@ -159,15 +162,16 @@ colnames(full_dat2) <- c("coll_loc", "num_loc", "max_loc", "max_dist", "dist_tra
 rownames(full_dat2) <- c()
 full_dat2$max_dist <- as.numeric(as.character(full_dat2$max_dist))
 full_dat2$dist_trav <- as.numeric(as.character(full_dat2$dist_trav))
-
+full_dat2$max_loc <- as.character(full_dat2$max_loc)
 
 #issues with exceeding daily requested number
 
 #create aggregated statistics, by college towns
-mean_max <- aggregate(. ~ coll_loc, full_dat2[-2], mean)
+mean_max <- aggregate(. ~ coll_loc, full_dat2[-3], mean)
 xtable(mean_max)
 
-common_dest <- full_dat2 %>% group_by(coll_loc,max_loc) %>% tally() %>% filter(n>1)
+common_dest <- full_dat2 %>% group_by(coll_loc,max_loc) %>% tally() %>% filter(n>4) %>% 
+  filter(max_loc != coll_loc) %>% top_n(3, n) #%>% arrange(coll_loc, max_loc, desc(n))
 xtable(common_dest)
 
 
@@ -271,3 +275,17 @@ v + geom_point()+facet_wrap(~ coll_loc, ncol = 3)+labs(y="Trip Progress",
                                                        size = "Relative Frequency")
 
 
+#Plotting a couple of histograms
+load("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/user_locations_precleaned.Rdata")
+hist(user_locations_c$probab[which(user_locations_c$probab>0)])
+hist(user_locations_c$location_num[which(user_locations_c$probab>0)])
+hist(user_locations_c$location_num[which(user_locations_c$probab>0 &
+                                           user_locations_c$probab<0.59)])
+
+mean(user_locations_c$location_num[which(user_locations_c$probab>0)])
+mean(user_locations_c$location_num[which(user_locations_c$probab>0 &
+                                           user_locations_c$probab<0.59)])
+
+median(user_locations_c$location_num[which(user_locations_c$probab>0)])
+median(user_locations_c$location_num[which(user_locations_c$probab>0 &
+                                           user_locations_c$probab<0.59)])
