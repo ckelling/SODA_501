@@ -31,7 +31,8 @@ towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence,
 
 #creating for loop to go through the dataset
 edge_list <- NULL
-for(j in 1:nrow(user_locations)){
+
+for(j in 332:nrow(user_locations)){
   #j <- 2
   user_towns <- user_locations$locations[[j]]
   
@@ -61,7 +62,7 @@ agg_elist$dest <- as.character(agg_elist$dest)
 
 #now, to find the location between the two cities
 agg_elist$dist <- rep(NA,nrow(agg_elist))
-key <- "AIzaSyCO5lo0A7luxk2279rpBZ-QUrN_4NZqiyg"
+key <- "AIzaSyBLGSr0BCTW2xhyAPwE123XE58eQup1Feg"
 
 for(i in 1:nrow(agg_elist)){
   towns <- agg_elist[i,1:2]
@@ -91,3 +92,23 @@ for(i in 1:nrow(agg_elist)){
   agg_elist$dist[i] <- dist
   
 }
+
+#line 333, 358, 717, 995, 1018, 1273, 1305, 1355, 1366, 1406, 1554, 1572, 1573, 1823 had HTTP error 500. 
+#Hence, filled in manaully.
+agg_elist$dist[333] <- 44
+agg_elist$dist[358] <- 242
+agg_elist$dist[717] <- 2370
+agg_elist$dist[995] <- 195
+agg_elist$dist[1018] <- 1429
+agg_elist$dist[1273] <- 1627
+agg_elist$dist[1305] <- 28
+agg_elist$dist[1355] <- 753
+agg_elist$dist[1356] <- 465
+agg_elist$dist[1406] <- 1112
+agg_elist$dist[1554] <- 370
+agg_elist$dist[1572] <- 2319
+agg_elist$dist[1573] <- 540
+agg_elist$dist[1823] <- 85
+
+save(agg_elist, file = "~/Box Sync/2018 Spring/SoDA 501/FinalProject/agg_elist.RData") 
+
