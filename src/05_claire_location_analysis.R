@@ -12,6 +12,7 @@ library(geosphere)
 library(geonames)
 library(Imap)
 library(googleway)
+library(dplyr)
 library(xtable)
 
 # Load data created my Xiaoran
