@@ -29,6 +29,12 @@ Clean bots (>.59) and users who have traveled to more than 25 unique locations
 #load("~/Desktop/paper/SODA501/project/user_locations.Rdata") #where Xiaoran's wd is
 load("~/Desktop/paper/SODA501/project/user_locations.Rdata")
 user_locations_c<-cbind(user_locations, prob.bot.df)
+for(i in 1:2235){
+  user_locations_c$location_num[i]<-length(user_locations_c$locations[[i]])
+}
+save(user_locations_c, file = "~/Desktop/paper/SODA501/project/user_locations_precleaned.Rdata")
+
+
 user_locations_cleaned<-user_locations_c[!is.na(user_locations_c$probab)&(user_locations_c$probab<=.59),]
 save(user_locations_cleaned, file = "~/Desktop/paper/SODA501/project/user_locations_botcleaned.Rdata")
 user_locations_cleaned$location_num<-rep(NA,1578)
