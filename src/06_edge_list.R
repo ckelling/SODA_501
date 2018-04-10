@@ -72,14 +72,16 @@ for(i in 1:length(agg_elist)){
   
   Sys.sleep(runif(1,1,3))
   
-  lonlat2 <- google_geocode(address = towns[2], key = key)
+  lonlat2 <- google_geocode(address = towns[1,2], key = key)
   lonlat2 <- lonlat2$results$geometry$location
   
   lonlat3 <- rbind(lonlat1,lonlat2)
   
+  names <- c(towns[1,1], towns[1,2])
+  
   print(i)
     
-  df.cities <- data.frame(name = towns,
+  df.cities <- data.frame(name = names,
                             lat  = lonlat3$lat,
                             lon  = lonlat3$lng)
   
