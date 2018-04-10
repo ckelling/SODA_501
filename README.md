@@ -1,5 +1,5 @@
 # SODA_501 Project
-Shipi Kankane, Claire Kelling, So Young Park, Xiaoran Sun
+Shipi Dhanorkar, Claire Kelling, So Young Park, Xiaoran Sun
 
 ## Project Description:
 For our group project for SODA 501, we will be analyzing a dataset of geo-tagged tweets
@@ -21,3 +21,6 @@ about what people are saying in these tweets, perhaps relating to where they are
 * src: includes all code for this project
 * output: includes all output from my code for this class, including images and some reports
 
+There are individual ReadMe files in each of the src and output folders. 
+* The src ReadMe gives details about the purpose of each code file.
+* The ouput ReadMe shows where each image/document was created, and a brief description.
