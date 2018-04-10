@@ -1,5 +1,5 @@
 # SODA_501 Project
-Shipi Kankane, Claire Kelling, So Young Park, Xiaoran Sun
+Shipi Dhanorkar, Claire Kelling, So Young Park, Xiaoran Sun
 
 ## Project Description:
 For our group project for SODA 501, we will be analyzing a dataset of geo-tagged tweets

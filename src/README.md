@@ -19,6 +19,10 @@ This file does the following tasks:
 * creates a plot comparing college towns and where the users are tweeting
 
 ## 03_botcheck.R
+This file does the following tasks:
+* reads the input twitter users
+* calls the botcheck function to calculate the  probability that the user is a bot. 
+* stores the probabilitie in a vector
 
 ## 04_user_location_analysis.R
 This file does the following tasks:
