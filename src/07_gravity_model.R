@@ -12,6 +12,7 @@ library(tidyverse)
 library(stringr)
 library(xtable)
 library(splitstackshape)
+library(gravity)
 
 #first load population and income data
 #population
@@ -98,15 +99,42 @@ colnames(regressionData4)[1] <- "originC"
 regressionData4[,2:8] <- NULL
 regressionData4[,5] <- NULL
 head(regressionData4)
+head(regressionData3)
 
-regressionData <- full_join(regressionData4, regressionData3, by=c("destinC", "originC"))
+regData3 <- distinct(regressionData3)
+regData4 <- distinct(regressionData4)
+
+regressionData <- full_join(regData3, regData4, by=c("destinC", "originC"))
 regressionData <- filter(regressionData, volume!="NA")
 head(regressionData)
+glimpse(regressionData) #oops income has $ sign and commas
+
+regressionData$incomeO2 = gsub("\\$|,", "", regressionData$incomeO)
+regressionData$incomeD2 = gsub("\\$|,", "", regressionData$incomeD)
+
+regressionData$incomeO <- as.numeric(regressionData$incomeO2)
+regressionData$incomeD <- as.numeric(regressionData$incomeD2)
+
+regressionData$incomeO2 <- NULL
+regressionData$incomeD2 <- NULL
+glimpse(regressionData)
 
 #gravity model
-fit <- glm(volume ~ distance+population+income, 
-           data = regressionData, family = poisson(link = "log"))
+regressionData$lincomeO <- log(regressionData$incomeO) #income and population need to be in the log form
+regressionData$lincomeD <- log(regressionData$incomeD)
+regressionData$lpopulationO <- log(regressionData$populationO)
+regressionData$lpopulationD <- log(regressionData$populationD)
 
+#PPML estimates gravity models in their multiplicative form via Poisson Pseudo Maximum Likelihood.
+fit <- PPML(y="volume", dist="distance", x=c("lpopulationO","lpopulationD","lincomeO","lincomeD"),
+            vce_robust=TRUE, data=regressionData)
+#okay to NA
+sum(is.na(regressionData$lpopulationO))
+sum(is.na(regressionData$lincomeO))
+sum(is.na(regressionData$lpopulationD))
+sum(is.na(regressionData$lincomeD))
+
+#how are we gonna solve the NA...
 options(digits=4)
 summary(fit) # display results
 exp(coef(fit))
