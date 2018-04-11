@@ -6,8 +6,6 @@
 ### Created 4/10/18 for gravity model analysis
 ### 
 
-#Still needs more work done!
-
 library(readr)
 library(stringr)
 library(tidyverse)
@@ -31,6 +29,7 @@ population$name <- NULL
 head(population)
 population$city <- str_sub(population$city, 1, str_length(population$city)-5) #remove " city", " town"
 population <- population[-c(1),] #remove Alabama
+
 #income
 income <- read_csv("Box Sync/2018 Spring/SoDA 501/FinalProject/medianhouseholdincome.csv")
 head(income) 
@@ -64,16 +63,49 @@ head(edges)
 colnames(edges)[1] <- "volume"
 colnames(edges)[2] <- "distance"
 colnames(edges)[3] <- "originC"
-colnames(edges)[4] <- "state"
+colnames(edges)[4] <- "stateC"
 colnames(edges)[5] <- "destinC"
-colnames(edges)[6] <- "state"
+colnames(edges)[6] <- "stateD"
 
-regressionData <- full_join(incomePop, edges, by.x = "city", by.y = "originC", all=TRUE)
-regressionData <- full_join(incomePop, edges, by.x = "city", by.y = "destinC", all=TRUE)
+regressionData <- merge(incomePop, edges, by.x = c("city", "state"),
+                        by.y = c("originC", "stateC"), all=TRUE)
+regressionData1 <- filter(regressionData, volume!="NA")
+regressionData1[,4:7] <- NULL 
+colnames(regressionData1)[1] <- "originC"
+colnames(regressionData1)[2] <- "stateO"
+colnames(regressionData1)[3] <- "incomeO"
+colnames(regressionData1)[4] <- "populationO"
+regressionData1 <- select(regressionData1, originC, stateO, incomeO, populationO, destinC, stateD)
+head(regressionData1)
+
+#add destination information
+regressionData2 <- merge(incomePop, regressionData1, by.x = c("city", "state"), 
+                         by.y = c("destinC", "stateD"), all=TRUE)
+head(regressionData2)
+regressionData3 <- filter(regressionData2, originC!="NA")
+regressionData3[,4:7] <- NULL 
+colnames(regressionData3)[1] <- "destinC"
+colnames(regressionData3)[2] <- "stateD"
+colnames(regressionData3)[3] <- "incomeD"
+colnames(regressionData3)[4] <- "populationD"
+
+regressionData3 <- filter(regressionData3, incomeD!="NA")
+head(regressionData3)
+
+#merge with origin data
+regressionData4 <- filter(regressionData, volume!="NA")
+colnames(regressionData4)[1] <- "originC"
+regressionData4[,2:8] <- NULL
+regressionData4[,5] <- NULL
+head(regressionData4)
+
+regressionData <- full_join(regressionData4, regressionData3, by=c("destinC", "originC"))
+regressionData <- filter(regressionData, volume!="NA")
+head(regressionData)
 
 #gravity model
-fit <- glm(n ~ distance+population+income, 
-            data = regressionData, family = poisson(link = "log"))
+fit <- glm(volume ~ distance+population+income, 
+           data = regressionData, family = poisson(link = "log"))
 
 options(digits=4)
 summary(fit) # display results
