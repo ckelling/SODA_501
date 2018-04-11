@@ -126,15 +126,15 @@ regressionData$lpopulationO <- log(regressionData$populationO)
 regressionData$lpopulationD <- log(regressionData$populationD)
 
 #PPML estimates gravity models in their multiplicative form via Poisson Pseudo Maximum Likelihood.
-fit <- PPML(y="volume", dist="distance", x=c("lpopulationO","lpopulationD","lincomeO","lincomeD"),
+fit <- PPML(y="volume", dist="distance", x=c("populationO","populationD","incomeO","incomeD"),
             vce_robust=TRUE, data=regressionData)
-#okay to NA
-sum(is.na(regressionData$lpopulationO))
-sum(is.na(regressionData$lincomeO))
-sum(is.na(regressionData$lpopulationD))
-sum(is.na(regressionData$lincomeD))
 
-#how are we gonna solve the NA...
+#okay many missing income and population data...
+sum(is.na(regressionData$populationO))
+sum(is.na(regressionData$incomeO))
+sum(is.na(regressionData$populationD))
+sum(is.na(regressionData$incomeD))
+
 options(digits=4)
 summary(fit) # display results
 exp(coef(fit))
