@@ -11,3 +11,6 @@ The following files were created in src/02_data_exploration.Rmd
 
 The following files were created in 03_botcheck.R
 * prob_freq (display of the distribution of the botcheck scores through the Botcheck algorithm)
+
+The following files were created in 05_claire_location_analysis.R
+* rel_trip_prog.png (image targetting the relationship between college town and placement as origin/destination)
