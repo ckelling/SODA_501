@@ -50,3 +50,8 @@ This file creates an edgelist for use in the Gravity model. The resulting datafr
 This file attempts to fit a preliminary gravity model.
 * adds Census median household income (county-level) and population (city-level) data onto the edgelist (city-level) dataset
 * with the merged dataset, estimates a gravity model using Poisson Pseudo Maximum Likelihood (PPML) method
+
+## 08_network_analysis.R
+This files creates a network matrix and graph
+* creates edge and node list for network analysis
+* draws a network graph between the cities
