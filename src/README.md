@@ -39,3 +39,9 @@ This file does the following tasks:
 * for all users, it records the largest travel and the sum of all distances traveled
 * records the indice of the college town 
 * also creates image comparing the relative frequency of trip progress vs the total number of locations vs the college town
+
+## 06_edge_list.R
+This file creates an edgelist for use in the Gravity model. The resulting dataframe includes the following information as a row:
+* Origin and Destination Cities (determined by time)
+* Number of users traveling between these two cities
+* Distance between these two cities
