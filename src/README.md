@@ -11,6 +11,9 @@ This file does the following tasks:
 * reads in the whole raw dataset (4.8 million tweets, 13.4GB) on ICS cluster
 * from the raw dataset, selects Twitter users who have had any tweet(s) geo-tagged with any of the 10 colleg towns ( https://www.citylab.com/equity/2016/09/americas-biggest-college-towns/498755/)
 * subsets the dataset by selecting all the tweets of the Twitter users selected above
+The input and output for this file are as follows:
+* \textbf{Input:}
+* \textbf{Output:}
 
 ## 02_data_exploration.R
 This file does the following tasks:
