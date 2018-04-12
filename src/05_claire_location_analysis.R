@@ -16,7 +16,7 @@ library(dplyr)
 library(xtable)
 
 # Load data created my Xiaoran
-load("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/user_locations.Rdata")
+#load("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/user_locations.Rdata")
 source("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/src/00_geo_dist_function.R")
 load("C:/Users/ckell/OneDrive/Penn State/2017-2018/01_Spring/SODA_501/SODA_501_project/data/user_locations_finalcleaned.Rdata")
 
