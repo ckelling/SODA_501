@@ -37,6 +37,9 @@ This file does the following tasks:
 * records all locations of tweets
 * records the furthest distance traveled, in km
 * for all users, it records the largest travel and the sum of all distances traveled
+
+## 07_gravity_model.R
+This file attempts to fit a preliminary gravity model.
 * records the indice of the college town 
 * also creates image comparing the relative frequency of trip progress vs the total number of locations vs the college town
 
