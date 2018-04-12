@@ -5,6 +5,7 @@ Below there is a brief description of all of the code files found in this folder
 ## 00_geo_dist_function.R
 This file includes a function to measure distance between two lat/lon points.
 From the following website: https://eurekastatistics.com/calculating-a-distance-matrix-for-geographic-points-using-r/
+It is an input for other files in this folder.
 
 ## 01_loading_and_subsetting.R
 This file does the following tasks:
@@ -23,8 +24,13 @@ This file does the following tasks:
 * creates a plot comparing college towns and where the users are tweeting
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** coll_town_tweets.Rdata
+* **Output:** 
+    * coll_comp.png (comparison of college towns in a 2x3 grid)
+    * comp_map.png (comparison of college towns in a 1x6 grid)
+    * comp_transp.png (editing the transparency)
+    * perc_hist.png (first measure of trip progress)
+
 
 ## 03_botcheck.R
 This file does the following tasks:
@@ -57,18 +63,18 @@ This file does the following tasks:
 * also creates image comparing the relative frequency of trip progress vs the total number of locations vs the college town  
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** 00_geo_dist_function.R, user_locations_finalcleaned.Rdata
+* **Output:** tables in report, rel_trip_prog.png
 
 ## 06_edge_list.R
 This file creates an edgelist for use in the Gravity model. The resulting dataframe includes the following information as a row:
-* Origin and Destination Cities (determined by time)
+* Origin and Destination Cities (determined by order)
 * Number of users traveling between these two cities
 * Distance between these two cities
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** 00_geo_dist_function.R, user_locations_finalcleaned.Rdata
+* **Output:** agg_elist.RData (dataframe: origin, destination, users, distance)
 
 ## 07_gravity_model.R
 This file attempts to fit a preliminary gravity model.
@@ -86,5 +92,5 @@ This files creates a network matrix and graph
 * provides simple network characteristics
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** 
+* **Output:** 
