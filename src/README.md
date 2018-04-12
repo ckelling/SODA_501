@@ -55,3 +55,4 @@ This file attempts to fit a preliminary gravity model.
 This files creates a network matrix and graph
 * creates edge and node list for network analysis
 * draws a network graph between the cities
+* provides simple network characteristics
