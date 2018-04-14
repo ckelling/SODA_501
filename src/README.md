@@ -82,8 +82,8 @@ This file attempts to fit a preliminary gravity model.
 * with the merged dataset, estimates a gravity model using Poisson Pseudo Maximum Likelihood (PPML) method
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** agg_elist.RData, Census median household income (csv), Census population (csv)
+* **Output:** regressionData.RData (dataframe: origin, population and income of origin, desitnation, population and income of destination, distance, volume)
 
 ## 08_network_analysis.R
 This files creates a network matrix and graph
@@ -92,5 +92,5 @@ This files creates a network matrix and graph
 * provides simple network characteristics
 
 The input and output for this file are as follows:
-* **Input:** 
-* **Output:** 
+* **Input:** agg_elist.RData
+* **Output:** travel_igraph
