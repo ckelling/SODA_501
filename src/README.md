@@ -45,13 +45,14 @@ The input and output for this file are as follows:
 ## 04_user_location_analysis.R
 This file does the following tasks:
 * selects unique different locations of each user and save the data
+* count numbers of unique different locations of each user
 * cleans bots (botcheck output>.59) and users who have traveled to more than 25 unique locations
 * computes descriptivs of each college town by aggregating the users
 * describes for each college town, the places (towns/cities and states) other than the specific town that users traveled to (or from)
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** coll_town_tweets.Rdata, coll_town_users.Rdata, ProbabilityOfBot-final.Rdata
+* **Output:** user_locations.Rdata, user_locations_precleaned.Rdata, user_locations_botcleaned.Rdata, user_locations_finalcleaned
 
 ## 05_claire_location_analysis.R
 This file does the following tasks:
