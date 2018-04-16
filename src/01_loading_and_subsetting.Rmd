@@ -94,3 +94,19 @@ save(coll_city_user_tweets, file = "/storage/home/xbs5014/Downloads/coll_city_tw
 ```
 
 To run it on the whole dataset, just change the 'xja.txt' into the name of the whole data file
+
+
+# week April 16 updates:
+We have four college towns for which there were ZERO users/tweets. Therefore, we want to look carefully into what's happending with these towns.
+They are:
+Ithaca, NY
+Bloomington, IN
+Lawrence, KS
+Columbia, MO
+
+One way is to filter through the raw tweets using the state name and see what's the closest to those cities.
+```{r}
+#first, MO (seems like the easiest)
+MOplaces<-unique(rawdat[grepl("MO", rawdat$place$full_name),]$place$full_name)
+save(MOplaces, file = "/storage/home/xbs5014/Downloads/MOplaces.Rdata")
+```
