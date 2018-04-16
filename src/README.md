@@ -14,8 +14,8 @@ This file does the following tasks:
 * subsets the dataset by selecting all the tweets of the Twitter users selected above
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** tweets_2015_dec_usa.txt
+* **Output:** coll_town_tweets.Rdata
 
 ## 02_data_exploration.R
 This file does the following tasks:
