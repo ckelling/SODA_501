@@ -1,6 +1,6 @@
 ---
 title: "09_four_missing_towns"
-author: "Xiaoran Sun"
+author: "Xiaoran Sun and Claire Kelling"
 date: "2018/4/16"
 output: html_document
 ---
@@ -13,6 +13,17 @@ Bloomington, IN
 Lawrence, KS
 Columbia, MO
 
+```{r}
+library(ggmap)
+library(XML)
+library(geosphere)
+library(geonames)
+library(Imap)
+library(googleway)
+library(dplyr)
+library(xtable)
+```
+
 One way is to filter through the raw tweets using the state name and see what's the closest to those cities.
 ```{r}
 #first, MO (seems like the easiest)
@@ -21,5 +32,48 @@ save(MOplaces, file = "/storage/home/xbs5014/Downloads/MOplaces.Rdata")
 ```
 
 ```{r}
-#then,
+#then, find out the two closest places to Columbia, MO
+## Using Claire's code in other section
+key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
+key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+load("~/Desktop/paper/SODA501/project/MOplaces.Rdata")
+lonlat3 <- NULL
+for(i in 1:length(MOplaces)){
+  addr<-MOplaces[i]
+  lonlat2 <- google_geocode(address = addr, key = key)
+  lonlat2 <- lonlat2$results$geometry$location
+  print(i)
+  #Sys.sleep(3)
+  lonlat_full<-cbind(addr, lonlat2)
+  lonlat3 <- rbind(lonlat3, lonlat_full)
+}
+
+
+#dmat3 <- round(GeoDistanceInMetresMatrix(df.MOcities) / 1000) 
+##This Claire's code doesn' work well for me, so I have to use distm(), which returns results in meters
+lonlatColumbia<-google_geocode(address = "Columbia, MO", key = key2)
+lonlatColumbia <- lonlatColumbia$results$geometry$location
+
+lonlat3$DistToTown<-rep(NA, length(lonlat3$addr))
+for(i in 1:length(lonlat3$addr)){
+  dist_temp<-round(distm(c(lonlatColumbia$lng, lonlatColumbia$lat), c(lonlat3[i,]$lng, lonlat3[i,]$lat), fun = distHaversine)/1000, 2)
+  lonlat3[i,]$DistToTown<-dist_temp
+}
+
+#sorting the output in ascending order
+lonlat4<-lonlat3[order(lonlat3$DistToTown),]
+
+#Found the closest: Ashland, MO, 20.83km away from Columbia, MO; the second closest is Centralia, MO, 33.41km away
+
+MOtop5<-lonlat4[1:5, c(1,4)]
+colnames(MOtop5)<-c("Town/City Name", "Distance to Columbia, MO")
+
+
+#record the furthest and the largest distance from the college town
+dist_vec <- dmat3[,coll_ind]
+max_dist <- max(dist_vec) #measured in km
+max_loc <- rownames(dmat3)[which(dmat3[,coll_ind] == max_dist)]
+new_dat <- c(max_loc, max_dist)
+
+
 ```
