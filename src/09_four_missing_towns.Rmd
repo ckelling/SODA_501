@@ -26,13 +26,13 @@ library(xtable)
 
 One way is to filter through the raw tweets using the state name and see what's the closest to those cities.
 ```{r}
-#first, MO (seems like the easiest)
+#1. MO (seems like the easiest)
 MOplaces<-unique(rawdat[grepl("MO", rawdat$place$full_name),]$place$full_name)
 save(MOplaces, file = "/storage/home/xbs5014/Downloads/MOplaces.Rdata")
 ```
 
 ```{r}
-#then, find out the two closest places to Columbia, MO
+#then, find out the closest places to Columbia, MO
 ## Using Claire's code in other section
 key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
 key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
@@ -67,13 +67,166 @@ lonlat4<-lonlat3[order(lonlat3$DistToTown),]
 
 MOtop5<-lonlat4[1:5, c(1,4)]
 colnames(MOtop5)<-c("Town/City Name", "Distance to Columbia, MO")
-
-
-#record the furthest and the largest distance from the college town
-dist_vec <- dmat3[,coll_ind]
-max_dist <- max(dist_vec) #measured in km
-max_loc <- rownames(dmat3)[which(dmat3[,coll_ind] == max_dist)]
-new_dat <- c(max_loc, max_dist)
-
+xtable(MOtop5)
 
 ```
+
+```{r}
+#2. KS
+KSplaces<-unique(rawdat[grepl("KS", rawdat$place$full_name),]$place$full_name)
+save(KSplaces, file = "/storage/home/xbs5014/Downloads/KSplaces.Rdata")
+```
+
+```{r}
+#then, find out the closest places to Lawrence, KS
+## Using Claire's code in other section
+key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
+key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+load("~/Desktop/paper/SODA501/project/KSplaces.Rdata")
+lonlat3 <- NULL
+for(i in 1:length(KSplaces)){
+  addr<-KSplaces[i]
+  lonlat2 <- google_geocode(address = addr, key = key)
+  lonlat2 <- lonlat2$results$geometry$location
+  print(i)
+  #Sys.sleep(3)
+  lonlat_full<-cbind(addr, lonlat2)
+  lonlat3 <- rbind(lonlat3, lonlat_full)
+}
+
+
+lonlatLawrence<-google_geocode(address = "Lawrence, KS", key = key2)
+lonlatLawrence <- lonlatLawrence$results$geometry$location
+
+lonlat3$DistToTown<-rep(NA, length(lonlat3$addr))
+for(i in 1:length(lonlat3$addr)){
+  dist_temp<-round(distm(c(lonlatLawrence$lng, lonlatLawrence$lat), c(lonlat3[i,]$lng, lonlat3[i,]$lat), fun = distHaversine)/1000, 2)
+  lonlat3[i,]$DistToTown<-dist_temp
+}
+
+#sorting the output in ascending order
+lonlat4<-lonlat3[order(lonlat3$DistToTown),]
+
+#Found the closest: Eudora, KS, 12.24km away from Lawrence, KS; the second closest is Tonganoxie, KS, 19.97km away
+
+KStop5<-lonlat4[1:5, c(1,4)]
+colnames(KStop5)<-c("Town/City Name", "Distance to Lawrence, KS")
+xtable(KStop5)
+
+```
+
+```{r}
+#then, find out the closest places to Lawrence, KS
+## Using Claire's code in other section
+key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
+key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+load("~/Desktop/paper/SODA501/project/KSplaces.Rdata")
+lonlat3 <- NULL
+for(i in 1:length(KSplaces)){
+  addr<-KSplaces[i]
+  lonlat2 <- google_geocode(address = addr, key = key)
+  lonlat2 <- lonlat2$results$geometry$location
+  print(i)
+  #Sys.sleep(3)
+  lonlat_full<-cbind(addr, lonlat2)
+  lonlat3 <- rbind(lonlat3, lonlat_full)
+}
+
+
+lonlatLawrence<-google_geocode(address = "Lawrence, KS", key = key2)
+lonlatLawrence <- lonlatLawrence$results$geometry$location
+
+lonlat3$DistToTown<-rep(NA, length(lonlat3$addr))
+for(i in 1:length(lonlat3$addr)){
+  dist_temp<-round(distm(c(lonlatLawrence$lng, lonlatLawrence$lat), c(lonlat3[i,]$lng, lonlat3[i,]$lat), fun = distHaversine)/1000, 2)
+  lonlat3[i,]$DistToTown<-dist_temp
+}
+
+#sorting the output in ascending order
+lonlat4<-lonlat3[order(lonlat3$DistToTown),]
+
+#Found the closest: Eudora, KS, 12.24km away from Lawrence, KS; the second closest is Tonganoxie, KS, 19.97km away
+
+KStop5<-lonlat4[1:5, c(1,4)]
+colnames(KStop5)<-c("Town/City Name", "Distance to Lawrence, KS")
+xtable(KStop5)
+
+```
+
+```{r}
+#then, find out the closest places to Bloomington, IN
+## Using Claire's code in other section
+key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
+key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+load("~/Desktop/paper/SODA501/project/INplaces.Rdata")
+lonlat3 <- NULL
+for(i in 1:length(INplaces)){
+  addr<-INplaces[i]
+  lonlat2 <- google_geocode(address = addr, key = key)
+  lonlat2 <- lonlat2$results$geometry$location
+  print(i)
+  #Sys.sleep(3)
+  lonlat_full<-cbind(addr, lonlat2)
+  lonlat3 <- rbind(lonlat3, lonlat_full)
+}
+
+
+lonlatBloomington<-google_geocode(address = "Bloomington, IN", key = key2)
+lonlatBloomington <- lonlatBloomington$results$geometry$location
+
+lonlat3$DistToTown<-rep(NA, length(lonlat3$addr))
+for(i in 1:length(lonlat3$addr)){
+  dist_temp<-round(distm(c(lonlatBloomington$lng, lonlatBloomington$lat), c(lonlat3[i,]$lng, lonlat3[i,]$lat), fun = distHaversine)/1000, 2)
+  lonlat3[i,]$DistToTown<-dist_temp
+}
+
+#sorting the output in ascending order
+lonlat4<-lonlat3[order(lonlat3$DistToTown),]
+
+#Found the closest: Ellettsville, IN, 11.43km away from Bloomington, IN; the second closest is Oolitic, IN, 29.44km away
+
+INtop5<-lonlat4[1:5, c(1,4)]
+colnames(INtop5)<-c("Town/City Name", "Distance to Ellettsville, IN")
+xtable(INtop5)
+
+```
+
+```{r}
+#then, find out the closest places to Ithaca, NY
+## Using Claire's code in other section
+key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
+key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+load("~/Desktop/paper/SODA501/project/NYplaces.Rdata")
+lonlat3 <- NULL
+for(i in 1:length(NYplaces)){
+  addr<-NYplaces[i]
+  lonlat2 <- google_geocode(address = addr, key = key)
+  lonlat2 <- lonlat2$results$geometry$location
+  print(i)
+  #Sys.sleep(3)
+  lonlat_full<-cbind(addr, lonlat2)
+  lonlat3 <- rbind(lonlat3, lonlat_full)
+}
+
+
+lonlatIthaca<-google_geocode(address = "Ithaca, NY", key = key2)
+lonlatIthaca <- lonlatIthaca$results$geometry$location
+
+lonlat3$DistToTown<-rep(NA, length(lonlat3$addr))
+for(i in 1:length(lonlat3$addr)){
+  dist_temp<-round(distm(c(lonlatIthaca$lng, lonlatIthaca$lat), c(lonlat3[i,]$lng, lonlat3[i,]$lat), fun = distHaversine)/1000, 2)
+  lonlat3[i,]$DistToTown<-dist_temp
+}
+
+#sorting the output in ascending order
+lonlat4<-lonlat3[order(lonlat3$DistToTown),]
+
+#Found the closest: Waverly, NY, 48.31km away from Ithaca, NY; the second closest is Vestal, NY, 54.36km away
+
+NYtop5<-lonlat4[1:5, c(1,4)]
+colnames(NYtop5)<-c("Town/City Name", "Distance to Ithaca, NY")
+xtable(NYtop5)
+
+```
+
+
