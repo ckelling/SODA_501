@@ -95,3 +95,11 @@ This files creates a network matrix and graph
 The input and output for this file are as follows:
 * **Input:** agg_elist.RData
 * **Output:** travel_igraph
+
+## 09_four_missing_towns.Rmd
+This file goes through the raw data to figure out why were have missing data (i.e., zero users) for four college towns.
+It does the following tasks:
+* selects all unique town/city locations from the raw data in MO, IN, KS, and NY
+* 
+* **Input:** tweets_2015_dec_usa.txt
+* **Output:** MOplaces.Rdata, INplaces.Rdata, KSplaces.Rdata, NYplaces.Rdata
