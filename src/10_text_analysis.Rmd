@@ -1,0 +1,127 @@
+---
+title: "text analysis"
+output: html_notebook
+---
+```{r load environment}
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(tidytext)
+library(stringr)
+library(scales)
+```
+
+```{r load and subset data}
+load("C:/Users/sup97/Downloads/coll_town_tweets.Rdata")
+
+tweets <- coll_town_user_tweets
+#names(tweets)
+
+data <- select(tweets, user, text, geo, place, timestamp_ms)
+
+towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence,
+         KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
+         "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+
+data_college_town <-data[grep(paste(towns,collapse="|"),
+                                                   data$place$full_name),]
+
+data_college_town$location <- data_college_town$place$full_name
+data_college_town$ID <- data_college_town$user$id
+data_college_town$user <- data_college_town$user$screen_name
+# data_college_town$coordinates <- data_college_town$geo$coordinates
+
+tweets_college_town <- select(data_college_town, location, ID, user, text, timestamp_ms)
+```
+
+Remove bots from the data
+```{r}
+#botcleaned users
+load("C:/Users/sup97/Downloads/user_locations_botcleaned.Rdata")
+
+botCleaned <- user_locations_cleaned
+tweets_college_town <- left_join(tweets_college_town, botCleaned, by="user")
+tweets_college_town <- subset(tweets_college_town, !is.na(probab))
+
+tweets_college_town[6:8] <- NULL
+tweets_college_town <- subset(tweets_college_town, user!="dominos") #remove dominos (maybe we need to also remove other companies too?)
+```
+
+I will start with removing stop words.
+```{r clean data}
+replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
+unnest_reg <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
+
+#I want to eliminate some unmeaningful words like tweet, est, mi, fl, etc. (from the most frequent appearing words)
+
+glimpse(stop_words)
+stop_words$lexicon
+
+myStopWords <- matrix(c("tweet", "est", "va", "fl", "tx", "champaign", "fl", "il", "pa", "mi", 1:10),ncol=2,byrow=FALSE)
+colnames(myStopWords) <- c("word", "lexicon")
+myStopWords <- tbl_df(myStopWords)
+mstop_words <- tbl_df(stop_words)
+myStopWords <- bind_rows(mstop_words, myStopWords)
+
+tidy_tweets <- tweets_college_town %>% 
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_replace_all(text, replace_reg, "")) %>%
+  unnest_tokens(word, text, token = "regex", pattern = unnest_reg) %>%
+  filter(!word %in% myStopWords$word,
+         str_detect(word, "[a-z]"))
+```
+
+Le'ts look at simple frequency
+```{r simple frequency}
+frequency <- tidy_tweets %>% 
+  group_by(location) %>% 
+  count(word, sort = TRUE) %>% 
+  left_join(tidy_tweets %>% 
+              group_by(location) %>% 
+              summarise(total = n())) %>%
+  mutate(freq = n/total)
+
+glimpse(frequency)
+frequency <- tbl_df(frequency)
+frequency <- frequency[order(-frequency$freq),] 
+
+frequency 
+
+frequency <- frequency %>% 
+  select(location, word, freq) %>% 
+  spread(location, freq)
+```
+
+
+```{r graphs}
+colnames(frequency) <- c("word", "AnnArbor", "Blacksburg", "Champaign", "CollegeStation", "Gainesville", "StateCollege")
+
+#Do we want to compare college town to college town? I could not find a nice way to plot these yet
+ggplot(frequency, aes(AnnArbor, Blacksburg)) +
+  geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
+  geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
+  scale_x_log10(labels = percent_format()) +
+  scale_y_log10(labels = percent_format()) +
+  geom_abline(color = "red")
+
+ggplot(frequency, aes(AnnArbor, StateCollege)) +
+  geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
+  geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
+  scale_x_log10(labels = percent_format()) +
+  scale_y_log10(labels = percent_format()) +
+  geom_abline(color = "red")
+
+ggplot(frequency, aes(Blacksburg, StateCollege)) +
+  geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
+  geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
+  scale_x_log10(labels = percent_format()) +
+  scale_y_log10(labels = percent_format()) +
+  geom_abline(color = "red")
+```
+```{r comparing word usage}
+
+```
+
+
