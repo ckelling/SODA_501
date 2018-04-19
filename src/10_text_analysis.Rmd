@@ -2,19 +2,14 @@
 title: "text analysis"
 output: html_notebook
 ---
-```{r load environment}
-library(tidyverse)
+
+```{r load and subset data}
 library(lubridate)
 library(ggplot2)
 library(dplyr)
 library(readr)
-library(tidytext)
-library(stringr)
-library(scales)
-```
 
-```{r load and subset data}
-load("C:/Users/sup97/Downloads/coll_town_tweets.Rdata")
+load("~/Downloads/coll_town_tweets.Rdata")
 
 tweets <- coll_town_user_tweets
 #names(tweets)
@@ -39,27 +34,44 @@ tweets_college_town <- select(data_college_town, location, ID, user, text, times
 Remove bots from the data
 ```{r}
 #botcleaned users
-load("C:/Users/sup97/Downloads/user_locations_botcleaned.Rdata")
+load("~/Downloads/user_locations_botcleaned.Rdata")
 
 botCleaned <- user_locations_cleaned
+botCleaned$location_num<-rep(NA,1578)
+for(i in 1:1578){
+  botCleaned$location_num[i]<-length(user_locations_cleaned$locations[[i]])
+}
+botCleaned<-botCleaned[botCleaned$location_num<=25,]
+
 tweets_college_town <- left_join(tweets_college_town, botCleaned, by="user")
 tweets_college_town <- subset(tweets_college_town, !is.na(probab))
+tweets_college_town <- subset(tweets_college_town, probab<0.59)
 
-tweets_college_town[6:8] <- NULL
-tweets_college_town <- subset(tweets_college_town, user!="dominos") #remove dominos (maybe we need to also remove other companies too?)
+tweets_college_town[6:7] <- NULL
+tweets_college_town <- tbl_df(tweets_college_town)
+
+company <- c("UMtransit", "countryrecruits", "dominos", "Coyote_Careers", "_ChampaignIL")
+for (i in company) {
+  tweets_college_town <- subset(tweets_college_town, user!=i)
+}
+
+View(tweets_college_town)
 ```
 
 I will start with removing stop words.
 ```{r clean data}
+library(tidytext)
+library(stringr)
+
 replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
 unnest_reg <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
 
 #I want to eliminate some unmeaningful words like tweet, est, mi, fl, etc. (from the most frequent appearing words)
 
-glimpse(stop_words)
-stop_words$lexicon
+#glimpse(stop_words)
+#stop_words$lexicon
 
-myStopWords <- matrix(c("tweet", "est", "va", "fl", "tx", "champaign", "fl", "il", "pa", "mi", 1:10),ncol=2,byrow=FALSE)
+myStopWords <- matrix(c("tweet", "est", "va", "fl", "tx", "fl", "il", "pa", "mi", "in", 1:10),ncol=2,byrow=FALSE)
 colnames(myStopWords) <- c("word", "lexicon")
 myStopWords <- tbl_df(myStopWords)
 mstop_words <- tbl_df(stop_words)
@@ -71,10 +83,14 @@ tidy_tweets <- tweets_college_town %>%
   unnest_tokens(word, text, token = "regex", pattern = unnest_reg) %>%
   filter(!word %in% myStopWords$word,
          str_detect(word, "[a-z]"))
+
+names(tidy_tweets)
 ```
 
 Le'ts look at simple frequency
 ```{r simple frequency}
+library(tidyverse)
+
 frequency <- tidy_tweets %>% 
   group_by(location) %>% 
   count(word, sort = TRUE) %>% 
@@ -96,6 +112,8 @@ frequency <- frequency %>%
 
 
 ```{r graphs}
+library(scales)
+
 colnames(frequency) <- c("word", "AnnArbor", "Blacksburg", "Champaign", "CollegeStation", "Gainesville", "StateCollege")
 
 #Do we want to compare college town to college town? I could not find a nice way to plot these yet
