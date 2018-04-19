@@ -105,7 +105,7 @@ frequency <- frequency[order(-frequency$freq),]
 
 frequency 
 
-frequency <- frequency %>% 
+frequency2 <- frequency %>% 
   select(location, word, freq) %>% 
   spread(location, freq)
 ```
@@ -114,31 +114,55 @@ frequency <- frequency %>%
 ```{r graphs}
 library(scales)
 
-colnames(frequency) <- c("word", "AnnArbor", "Blacksburg", "Champaign", "CollegeStation", "Gainesville", "StateCollege")
+colnames(frequency2) <- c("word", "AnnArbor", "Blacksburg", "Champaign", "CollegeStation", "Gainesville", "StateCollege")
 
 #Do we want to compare college town to college town? I could not find a nice way to plot these yet
-ggplot(frequency, aes(AnnArbor, Blacksburg)) +
+ggplot(frequency2, aes(AnnArbor, Blacksburg)) +
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
   geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
   scale_x_log10(labels = percent_format()) +
   scale_y_log10(labels = percent_format()) +
   geom_abline(color = "red")
 
-ggplot(frequency, aes(AnnArbor, StateCollege)) +
+ggplot(frequency2, aes(AnnArbor, StateCollege)) +
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
   geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
   scale_x_log10(labels = percent_format()) +
   scale_y_log10(labels = percent_format()) +
   geom_abline(color = "red")
 
-ggplot(frequency, aes(Blacksburg, StateCollege)) +
+ggplot(frequency2, aes(Blacksburg, StateCollege)) +
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
   geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
   scale_x_log10(labels = percent_format()) +
   scale_y_log10(labels = percent_format()) +
   geom_abline(color = "red")
 ```
-```{r comparing word usage}
+```{r wordcloud}
+library(wordcloud)
+
+#slice dataset by location
+AnnArbor <- subset(frequency, location=="Ann Arbor, MI")
+Gainesville <- subset(frequency, location=="Gainesville, FL")
+CollegeStation <- subset(frequency, location=="College Station, TX")
+Champaign <- subset(frequency, location=="Champaign, IL")
+StateCollege <- subset(frequency, location=="State College, PA")
+Blacksburg <- subset(frequency, location=="Blacksburg, VA")
+
+mean(AnnArbor$freq)
+
+#delete the location names
+locationNames <- matrix(c("ann", "arbor", "michigan"),ncol=1,byrow=FALSE)
+colnames(locationNames) <- "word"
+locationNames <- tbl_df(locationNames)
+
+AnnArbor %>%
+  filter(!word %in% locationNames$word,
+         str_detect(word, "[a-z]"))
+
+wordcloud(words=AnnArbor$word, freq=AnnArbor$freq, min.freq = 0.0003,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
 
 ```
 
