@@ -141,6 +141,13 @@ ggplot(frequency2, aes(Blacksburg, StateCollege)) +
 ```{r wordcloud}
 library(wordcloud)
 
+#delete the location names
+locationNames <- c("ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "illinois", "state", "pennsylvania", "blacksburg", "virginia")
+
+for (i in locationNames) {
+  frequency <- subset(frequency, word!=i)
+}
+
 #slice dataset by location
 AnnArbor <- subset(frequency, location=="Ann Arbor, MI")
 Gainesville <- subset(frequency, location=="Gainesville, FL")
@@ -149,20 +156,33 @@ Champaign <- subset(frequency, location=="Champaign, IL")
 StateCollege <- subset(frequency, location=="State College, PA")
 Blacksburg <- subset(frequency, location=="Blacksburg, VA")
 
-mean(AnnArbor$freq)
+#mean(CollegeStation$freq)
+#median(CollegeStation$freq)
 
-#delete the location names
-locationNames <- matrix(c("ann", "arbor", "michigan"),ncol=1,byrow=FALSE)
-colnames(locationNames) <- "word"
-locationNames <- tbl_df(locationNames)
-
-AnnArbor %>%
-  filter(!word %in% locationNames$word,
-         str_detect(word, "[a-z]"))
-
-wordcloud(words=AnnArbor$word, freq=AnnArbor$freq, min.freq = 0.0003,
-          max.words=200, random.order=FALSE, rot.per=0.35, 
+wordCloud <- function(filename){
+  wordcloud(words=filename$word, freq=filename$freq, min.freq=median(filename$freq),
+          max.words=300, random.order=FALSE, random.color=FALSE, 
           colors=brewer.pal(8, "Dark2"))
+}
+
+jpeg('~/Downloads/AnnArbor.jpg')
+wordCloud(AnnArbor)
+dev.off()
+jpeg('~/Downloads/Gainesville.jpg')
+wordCloud(Gainesville)
+dev.off()
+jpeg('~/Downloads/Collegestation.jpg')
+wordCloud(CollegeStation)
+dev.off()
+jpeg('~/Downloads/Champaing.jpg')
+wordCloud(Champaign)
+dev.off()
+jpeg('~/Downloads/Statecollege.jpg')
+wordCloud(StateCollege)
+dev.off()
+jpeg('~/Downloads/Blacksburg.jpg')
+wordCloud(Blacksburg)
+dev.off()
 
 ```
 
