@@ -50,7 +50,8 @@ tweets_college_town <- subset(tweets_college_town, probab<0.59)
 tweets_college_town[6:7] <- NULL
 tweets_college_town <- tbl_df(tweets_college_town)
 
-company <- c("UMtransit", "countryrecruits", "dominos", "Coyote_Careers", "_ChampaignIL")
+#eliminating noticeable companies
+company <- c("UMtransit", "countryrecruits", "dominos", "Coyote_Careers", "_ChampaignIL", "hucksbeerbuzz", "SwampHead", "tmj_il_vets", "_GainesvilleFL", "PlastipakJobs")
 for (i in company) {
   tweets_college_town <- subset(tweets_college_town, user!=i)
 }
@@ -97,20 +98,20 @@ frequency <- tidy_tweets %>%
   left_join(tidy_tweets %>% 
               group_by(location) %>% 
               summarise(total = n())) %>%
-  mutate(freq = n/total)
+  mutate(freq = n/total) %>%
+  tbl_df()
 
 glimpse(frequency)
-frequency <- tbl_df(frequency)
-frequency <- frequency[order(-frequency$freq),] 
 
-#delete the location names
-locationNames <- c("#annarbor", "ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign")
+#delete the location names and hiring/job
+delete <- c("#annarbor", "ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "urbana", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign", "hiring", "job", "#hiring", "#job", "tech", "#manufacturing", "#veterans", "#jobs", "#supplychain")
 
-for (i in locationNames) {
+for (i in delete) {
   frequency <- subset(frequency, word!=i)
 }
+frequency <- frequency[order(-frequency$freq),] 
 
-topFrequency <- slice(frequency, 1:10)
+topFrequency <- slice(frequency, 1:15)
 xtable(topFrequency)
 
 #slice dataset by location
@@ -129,6 +130,14 @@ topFrequency2 <- slice(i, 1:10)
 topFrequency2 <- tbl_df(topFrequency2$word)
 topFrequency1 <- bind_cols(topFrequency1, topFrequency2)
 }
+
+#Champaign has la as 10th top word. replace it with the 11th
+#topFrequency2 <- slice(Champaign, 1:11)
+#topFrequency2 #people is the 11th word
+#State College has posted as 10th top word. replace it with the 11th
+#topFrequency2 <- slice(StateCollege, 1:11)
+#topFrequency2 #bryce is the 11th word
+
 xtable(topFrequency1)
 
 frequency2 <- frequency %>% 
@@ -167,34 +176,41 @@ ggplot(frequency2, aes(Blacksburg, StateCollege)) +
 ```{r wordcloud}
 library(wordcloud2)
 
-#mean(CollegeStation$freq)
-#median(CollegeStation$freq)
+head(CollegeStation)
+
+AnnArbor2 <- dplyr::select(AnnArbor, word, freq)
+CollegeStation2 <- dplyr::select(CollegeStation, word, freq)
+StateCollege2 <- dplyr::select(StateCollege, word, freq)
+Blacksburg2 <- dplyr::select(Blacksburg, word, freq)
+Gainesville2 <- dplyr::select(Gainesville, word, freq)
+Champaign2 <- dplyr::select(Champaign, word, freq)
 
 wordCloud <- function(filename){
-  wordcloud(words=filename$word, freq=filename$freq, min.freq=median(filename$freq),
-          max.words=300, random.order=FALSE, random.color=FALSE, use.r.layout = TRUE,
-          colors=brewer.pal(8, "Dark2"))
+  wordcloud2(data=filename, size = 1, minSize = 0, gridSize =  0,
+    fontFamily = 'Segoe UI', fontWeight = 'bold',
+    color = 'random-dark', backgroundColor = "white",
+    minRotation = -pi/4, maxRotation = pi/4, shuffle = TRUE,
+    rotateRatio = 0.4, shape = 'circle', ellipticity = 0.65,
+    widgetsize = NULL, figPath = NULL, hoverFunction = NULL)
 }
 
-wordCloud(CollegeStation)
-
 jpeg('~/Downloads/AnnArbor.jpg')
-wordCloud(AnnArbor)
+wordCloud(AnnArbor2)
 dev.off()
 jpeg('~/Downloads/Gainesville.jpg')
-wordCloud(Gainesville)
+wordCloud(Gainesville2)
 dev.off()
 jpeg('~/Downloads/Collegestation.jpg')
-wordCloud(CollegeStation)
+wordCloud(CollegeStation2)
 dev.off()
 jpeg('~/Downloads/Champaing.jpg')
-wordCloud(Champaign)
+wordCloud(Champaign2)
 dev.off()
 jpeg('~/Downloads/Statecollege.jpg')
-wordCloud(StateCollege)
+wordCloud(StateCollege2)
 dev.off()
 jpeg('~/Downloads/Blacksburg.jpg')
-wordCloud(Blacksburg)
+wordCloud(Blacksburg2)
 dev.off()
 
 ```
