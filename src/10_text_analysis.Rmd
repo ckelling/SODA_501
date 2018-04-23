@@ -194,25 +194,26 @@ wordCloud <- function(filename){
     widgetsize = NULL, figPath = NULL, hoverFunction = NULL)
 }
 
-jpeg('~/Downloads/AnnArbor.jpg')
-wordCloud(AnnArbor2)
-dev.off()
-jpeg('~/Downloads/Gainesville.jpg')
-wordCloud(Gainesville2)
-dev.off()
-jpeg('~/Downloads/Collegestation.jpg')
-wordCloud(CollegeStation2)
-dev.off()
-jpeg('~/Downloads/Champaing.jpg')
-wordCloud(Champaign2)
-dev.off()
-jpeg('~/Downloads/Statecollege.jpg')
-wordCloud(StateCollege2)
-dev.off()
-jpeg('~/Downloads/Blacksburg.jpg')
-wordCloud(Blacksburg2)
-dev.off()
+#save images to pdf
+library(webshot)
+webshot::install_phantomjs()
+# Make the graph
+g1<-wordCloud(AnnArbor2)
+g2<-wordCloud(Gainesville2)
+g3<-wordCloud(CollegeStation2)
+g4<-wordCloud(Champaign2)
+g5<-wordCloud(StateCollege2)
+g6<-wordCloud(Blacksburg2)
 
+# save it in html
+library("htmlwidgets")
+
+graphs <- list(g1, g2, g3, g4, g5, g6)
+for (i in graphs){
+saveWidget(i,"tmp.html",selfcontained = F)
+}
+# and in png
+webshot("tmp.html","fig_1.pdf", delay =5, vwidth = 480, vheight=480)
 ```
 
 
