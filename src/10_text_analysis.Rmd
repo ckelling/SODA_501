@@ -104,7 +104,7 @@ frequency <- tbl_df(frequency)
 frequency <- frequency[order(-frequency$freq),] 
 
 #delete the location names
-locationNames <- c("ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign")
+locationNames <- c("#annarbor", "ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign")
 
 for (i in locationNames) {
   frequency <- subset(frequency, word!=i)
@@ -126,7 +126,8 @@ locations <- list(AnnArbor, Blacksburg, Champaign, CollegeStation, Gainesville, 
 topFrequency1 <- NULL
 for (i in locations){
 topFrequency2 <- slice(i, 1:10)
-topFrequency1 <- rbind(topFrequency1, topFrequency2)
+topFrequency2 <- tbl_df(topFrequency2$word)
+topFrequency1 <- bind_cols(topFrequency1, topFrequency2)
 }
 xtable(topFrequency1)
 
