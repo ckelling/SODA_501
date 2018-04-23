@@ -90,7 +90,7 @@ names(tidy_tweets)
 Le'ts look at simple frequency
 ```{r simple frequency}
 library(tidyverse)
-
+library(xtable)
 frequency <- tidy_tweets %>% 
   group_by(location) %>% 
   count(word, sort = TRUE) %>% 
@@ -103,7 +103,32 @@ glimpse(frequency)
 frequency <- tbl_df(frequency)
 frequency <- frequency[order(-frequency$freq),] 
 
-frequency 
+#delete the location names
+locationNames <- c("ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign")
+
+for (i in locationNames) {
+  frequency <- subset(frequency, word!=i)
+}
+
+topFrequency <- slice(frequency, 1:10)
+xtable(topFrequency)
+
+#slice dataset by location
+AnnArbor <- subset(frequency, location=="Ann Arbor, MI")
+Gainesville <- subset(frequency, location=="Gainesville, FL")
+CollegeStation <- subset(frequency, location=="College Station, TX")
+Champaign <- subset(frequency, location=="Champaign, IL")
+StateCollege <- subset(frequency, location=="State College, PA")
+Blacksburg <- subset(frequency, location=="Blacksburg, VA")
+
+locations <- list(AnnArbor, Blacksburg, Champaign, CollegeStation, Gainesville, StateCollege)
+
+topFrequency1 <- NULL
+for (i in locations){
+topFrequency2 <- slice(i, 1:10)
+topFrequency1 <- rbind(topFrequency1, topFrequency2)
+}
+xtable(topFrequency1)
 
 frequency2 <- frequency %>% 
   select(location, word, freq) %>% 
@@ -139,31 +164,18 @@ ggplot(frequency2, aes(Blacksburg, StateCollege)) +
   geom_abline(color = "red")
 ```
 ```{r wordcloud}
-library(wordcloud)
-
-#delete the location names
-locationNames <- c("ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "illinois", "state", "pennsylvania", "blacksburg", "virginia")
-
-for (i in locationNames) {
-  frequency <- subset(frequency, word!=i)
-}
-
-#slice dataset by location
-AnnArbor <- subset(frequency, location=="Ann Arbor, MI")
-Gainesville <- subset(frequency, location=="Gainesville, FL")
-CollegeStation <- subset(frequency, location=="College Station, TX")
-Champaign <- subset(frequency, location=="Champaign, IL")
-StateCollege <- subset(frequency, location=="State College, PA")
-Blacksburg <- subset(frequency, location=="Blacksburg, VA")
+library(wordcloud2)
 
 #mean(CollegeStation$freq)
 #median(CollegeStation$freq)
 
 wordCloud <- function(filename){
   wordcloud(words=filename$word, freq=filename$freq, min.freq=median(filename$freq),
-          max.words=300, random.order=FALSE, random.color=FALSE, 
+          max.words=300, random.order=FALSE, random.color=FALSE, use.r.layout = TRUE,
           colors=brewer.pal(8, "Dark2"))
 }
+
+wordCloud(CollegeStation)
 
 jpeg('~/Downloads/AnnArbor.jpg')
 wordCloud(AnnArbor)
