@@ -208,12 +208,23 @@ g6<-wordCloud(Blacksburg2)
 # save it in html
 library("htmlwidgets")
 
-graphs <- list(g1, g2, g3, g4, g5, g6)
-for (i in graphs){
-saveWidget(i,"tmp.html",selfcontained = F)
-}
+setwd("~/Box Sync/2018 Spring/SoDA 501/FinalProject")
+
+saveWidget(g1,"g1.html",selfcontained = F)
+saveWidget(g2,"g2.html",selfcontained = F)
+saveWidget(g3,"g3.html",selfcontained = F)
+saveWidget(g4,"g4.html",selfcontained = F)
+saveWidget(g5,"g5.html",selfcontained = F)
+saveWidget(g6,"g6.html",selfcontained = F)
+
+webshot("g1.html","fig_1.pdf", delay =20, vwidth = 480, vheight=480)
+webshot("g2.html","fig_2.pdf", delay =20, vwidth = 480, vheight=480)
+webshot("g3.html","fig_3.pdf", delay =20, vwidth = 480, vheight=480)
+webshot("g4.html","fig_4.pdf", delay =20, vwidth = 480, vheight=480)
+webshot("g5.html","fig_5.pdf", delay =20, vwidth = 480, vheight=480)
+webshot("g6.html","fig_6.pdf", delay =20, vwidth = 480, vheight=480)
 # and in png
-webshot("tmp.html","fig_1.pdf", delay =5, vwidth = 480, vheight=480)
+#webshot("tmp.html","fig_1.pdf", delay =5, vwidth = 480, vheight=480)
 ```
 
 
