@@ -38,8 +38,8 @@ This file does the following tasks:
 * stores the probabilitie in a vector
 
 The input and output for this file are as follows:
-* **Input:**
-* **Output:**
+* **Input:** coll_town_users.Rdata
+* **Output:** bot probability per user
 
 ## 04_user_location_analysis.R
 This file does the following tasks:
