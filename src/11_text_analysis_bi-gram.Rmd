@@ -1,0 +1,81 @@
+---
+title: "text analysis: bi-gram"
+---
+
+
+```{r load and subset data}
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(readr)
+
+load("~/Downloads/coll_town_tweets.Rdata")
+
+tweets <- coll_town_user_tweets
+#names(tweets)
+
+data <- select(tweets, user, text, geo, place, timestamp_ms)
+
+towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence,
+         KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
+         "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+
+data_college_town <-data[grep(paste(towns,collapse="|"),
+                                                   data$place$full_name),]
+
+data_college_town$location <- data_college_town$place$full_name
+data_college_town$ID <- data_college_town$user$id
+data_college_town$user <- data_college_town$user$screen_name
+# data_college_town$coordinates <- data_college_town$geo$coordinates
+
+tweets_college_town <- select(data_college_town, location, ID, user, text, timestamp_ms)
+```
+
+Remove bots from the data
+```{r}
+#botcleaned users
+load("~/Downloads/user_locations_botcleaned.Rdata")
+
+botCleaned <- user_locations_cleaned
+botCleaned$location_num<-rep(NA,1578)
+for(i in 1:1578){
+  botCleaned$location_num[i]<-length(user_locations_cleaned$locations[[i]])
+}
+botCleaned<-botCleaned[botCleaned$location_num<=25,]
+
+tweets_college_town <- left_join(tweets_college_town, botCleaned, by="user")
+tweets_college_town <- subset(tweets_college_town, !is.na(probab))
+tweets_college_town <- subset(tweets_college_town, probab<0.59)
+
+tweets_college_town[6:7] <- NULL
+tweets_college_town <- tbl_df(tweets_college_town)
+
+#eliminating noticeable companies
+company <- c("UMtransit", "countryrecruits", "dominos", "Coyote_Careers", "_ChampaignIL", "hucksbeerbuzz", "SwampHead", "tmj_il_vets", "_GainesvilleFL", "PlastipakJobs")
+for (i in company) {
+  tweets_college_town <- subset(tweets_college_town, user!=i)
+}
+
+#View(tweets_college_town)
+```
+
+
+```{r bi-grams}
+library(quanteda)
+txt <- tweets_college_town$text
+
+delete <- c("ann arbor", "college station", "arbor mi", "state college", "in gainesville", "station tx", "champaign il", "in champaign", "in college", "champaign illinois", "in ann", "gainesville fl", "gainesville florida", "in blacksburg", "blacksburg virginia", "arbor michigan", "college pa", "of illinois", "blacksburg va", "#annarbor", "ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "urbana", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign", "hiring", "job", "#hiring", "#job", "tech", "#manufacturing", "#veterans", "#jobs", "#supplychain")
+
+replace_reg <- c("https://t.co/", "http://", "&amp;", "&lt;", "&gt;", "RT", "https")
+
+myDfm <- tokens(txt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+featnames(myDfm)
+topfeatures(myDfm)
+```

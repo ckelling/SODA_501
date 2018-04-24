@@ -56,7 +56,7 @@ for (i in company) {
   tweets_college_town <- subset(tweets_college_town, user!=i)
 }
 
-View(tweets_college_town)
+#View(tweets_college_town)
 ```
 
 I will start with removing stop words.
@@ -88,7 +88,7 @@ tidy_tweets <- tweets_college_town %>%
 names(tidy_tweets)
 ```
 
-Le'ts look at simple frequency
+Let's look at simple frequency
 ```{r simple frequency}
 library(tidyverse)
 library(xtable)
@@ -139,12 +139,7 @@ topFrequency1 <- bind_cols(topFrequency1, topFrequency2)
 #topFrequency2 #bryce is the 11th word
 
 xtable(topFrequency1)
-
-frequency2 <- frequency %>% 
-  select(location, word, freq) %>% 
-  spread(location, freq)
 ```
-
 
 ```{r graphs}
 library(scales)
@@ -173,6 +168,7 @@ ggplot(frequency2, aes(Blacksburg, StateCollege)) +
   scale_y_log10(labels = percent_format()) +
   geom_abline(color = "red")
 ```
+
 ```{r wordcloud}
 library(wordcloud2)
 
@@ -226,5 +222,7 @@ webshot("g6.html","fig_6.pdf", delay =20, vwidth = 480, vheight=480)
 # and in png
 #webshot("tmp.html","fig_1.pdf", delay =5, vwidth = 480, vheight=480)
 ```
+
+
 
 
