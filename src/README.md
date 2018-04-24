@@ -31,7 +31,6 @@ The input and output for this file are as follows:
     * comp_transp.png (editing the transparency)
     * perc_hist.png (first measure of trip progress)
 
-
 ## 03_botcheck.R
 This file does the following tasks:
 * reads the input twitter users
@@ -100,6 +99,25 @@ The input and output for this file are as follows:
 This file goes through the raw data to figure out why were have missing data (i.e., zero users) for four college towns.
 It does the following tasks:
 * selects all unique town/city locations from the raw data in MO, IN, KS, and NY
-* 
+
+The input and output for this file are as follows:
 * **Input:** tweets_2015_dec_usa.txt
 * **Output:** MOplaces.Rdata, INplaces.Rdata, KSplaces.Rdata, NYplaces.Rdata
+
+## 10_text_analysis.Rmd
+This files analyzes texts from tweets at uni-gram level
+* deletes stopwords and irrelevant words such as location names and state abbreviations
+* finds the most frequently co-occuring uni-grams overall and per college town
+
+The input and output for this file are as follows:
+* **Input:** coll_town_tweets.Rdata
+* **Output:** wordclouds and frequency tables
+
+## 11_text_analysis_bi-gram.Rmd
+This files analyzes texts from tweets at bi-gram level
+* deletes stopwords and irrelevant words such as location names and state abbreviations
+* finds the most frequently co-occuring bi-grams overall and per college town
+
+The input and output for this file are as follows:
+* **Input:** coll_town_tweets.Rdata
+* **Output:** wordclouds and frequency tables
