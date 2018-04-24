@@ -1,6 +1,5 @@
 ---
 title: "text analysis"
-output: html_notebook
 ---
 
 ```{r load and subset data}
