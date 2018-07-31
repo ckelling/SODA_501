@@ -34,8 +34,8 @@ save(MOplaces, file = "/storage/home/xbs5014/Downloads/MOplaces.Rdata")
 ```{r}
 #then, find out the closest places to Columbia, MO
 ## Using Claire's code in other section
-key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
-key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+#key <- 
+#key2 <- 
 load("~/Desktop/paper/SODA501/project/MOplaces.Rdata")
 lonlat3 <- NULL
 for(i in 1:length(MOplaces)){
@@ -80,8 +80,8 @@ save(KSplaces, file = "/storage/home/xbs5014/Downloads/KSplaces.Rdata")
 ```{r}
 #then, find out the closest places to Lawrence, KS
 ## Using Claire's code in other section
-key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
-key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+#key <- 
+#key2 <- 
 load("~/Desktop/paper/SODA501/project/KSplaces.Rdata")
 lonlat3 <- NULL
 for(i in 1:length(KSplaces)){
@@ -118,8 +118,8 @@ xtable(KStop5)
 ```{r}
 #then, find out the closest places to Lawrence, KS
 ## Using Claire's code in other section
-key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
-key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+#key <- 
+#key2 <- 
 load("~/Desktop/paper/SODA501/project/KSplaces.Rdata")
 lonlat3 <- NULL
 for(i in 1:length(KSplaces)){
@@ -156,8 +156,8 @@ xtable(KStop5)
 ```{r}
 #then, find out the closest places to Bloomington, IN
 ## Using Claire's code in other section
-key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
-key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+#key <- 
+#key2 <- 
 load("~/Desktop/paper/SODA501/project/INplaces.Rdata")
 lonlat3 <- NULL
 for(i in 1:length(INplaces)){
@@ -194,8 +194,8 @@ xtable(INtop5)
 ```{r}
 #then, find out the closest places to Ithaca, NY
 ## Using Claire's code in other section
-key <- "AIzaSyBx0xrnryLGil3jNbKOkgSTBaHeZGqxLQg"
-key2 <- "AIzaSyAtI-X5J7uMMqVDQwpKUqLqVJDQ2GBZ1kQ"
+#key <- 
+#key2 <- 
 load("~/Desktop/paper/SODA501/project/NYplaces.Rdata")
 lonlat3 <- NULL
 for(i in 1:length(NYplaces)){
