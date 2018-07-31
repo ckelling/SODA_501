@@ -72,10 +72,15 @@ gg <- gg + #geom_map(data=us, map=us,
 
 Now, I would like to implement this for a different user.
 ```{r}
-first_user_id <- tweets_in_college_town[4,]
+first_user_id <- tweets_in_college_town[4,] #4 is a college student from Nova, 12 is pretty close (not a student)
 first_user_id2 <- first_user_id$user$id
 
 first_user_tweets <- coll_town_user_tweets[which(coll_town_user_tweets$user$id == first_user_id2),]
+
+#What is this user tweeting? 
+tweet_text <- unique(first_user_tweets$text)
+tweet_location <- first_user_tweets$place$name
+
 unique(first_user_tweets$place$name)
 
 places_first_user <- unique(first_user_tweets$place) # he went to 3 places
@@ -90,7 +95,7 @@ gg <- gg + geom_map(data=us, map=us,
                     aes(x=long, y=lat, map_id=region),
                     fill="#ffffff", color="#ffffff", size=0.15)+ 
   geom_point(aes(x = Long, y = Lat), data = coords_first_user)+
-  geom_path(data=coords_first_user, aes(x=Long, y=Lat), color="black", size=1)
+  geom_path(data=coords_first_user, aes(x=Long, y=Lat), color="blue", size=1)
 gg
 
 #This is almost certainly a college person going home to NOVA from Blacksburg!
