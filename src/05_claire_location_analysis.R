@@ -289,3 +289,24 @@ mean(user_locations_c$location_num[which(user_locations_c$probab>0 &
 median(user_locations_c$location_num[which(user_locations_c$probab>0)])
 median(user_locations_c$location_num[which(user_locations_c$probab>0 &
                                            user_locations_c$probab<0.59)])
+
+hist(user_locations_c$location_num[which(user_locations_c$probab>0 &
+                                           user_locations_c$location_num<600)], binwidth = 40)
+
+
+gg_dat <- as.data.frame(as.numeric(user_locations_c$location_num[which(user_locations_c$probab>0 &
+                                                user_locations_c$location_num<200)]))
+colnames(gg_dat) <- "location_num"
+ggplot(data=gg_dat,
+       aes(location_num)) + 
+  geom_histogram(bins = 200)+labs(x="Number of Locations")+ geom_vline(xintercept=25, col ="red")
+
+max(user_locations_c$location_num[which(user_locations_c$probab>0 &
+                                          user_locations_c$probab<0.59)])
+max(user_locations_c$probab)
+
+gg_dat2 <- user_locations_c[which(user_locations_c$probab>0),]
+
+ggplot(data=gg_dat2,
+       aes(probab)) + 
+  geom_histogram(bins = 200)+labs(x="Bot Check Probability")+ geom_vline(xintercept=0.59, col ="red")
