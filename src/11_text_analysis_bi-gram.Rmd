@@ -1,0 +1,244 @@
+---
+title: "text analysis: bi-gram"
+---
+
+
+```{r load and subset data}
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(readr)
+
+load("~/Downloads/coll_town_tweets.Rdata")
+
+tweets <- coll_town_user_tweets
+#names(tweets)
+
+data <- select(tweets, user, text, geo, place, timestamp_ms)
+
+towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence,
+         KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
+         "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
+
+data_college_town <-data[grep(paste(towns,collapse="|"),
+                                                   data$place$full_name),]
+
+data_college_town$location <- data_college_town$place$full_name
+data_college_town$ID <- data_college_town$user$id
+data_college_town$user <- data_college_town$user$screen_name
+# data_college_town$coordinates <- data_college_town$geo$coordinates
+
+tweets_college_town <- select(data_college_town, location, ID, user, text, timestamp_ms)
+```
+
+Remove bots from the data
+```{r}
+#botcleaned users
+load("~/Downloads/user_locations_botcleaned.Rdata")
+
+botCleaned <- user_locations_cleaned
+botCleaned$location_num<-rep(NA,1578)
+for(i in 1:1578){
+  botCleaned$location_num[i]<-length(user_locations_cleaned$locations[[i]])
+}
+botCleaned<-botCleaned[botCleaned$location_num<=25,]
+
+tweets_college_town <- left_join(tweets_college_town, botCleaned, by="user")
+tweets_college_town <- subset(tweets_college_town, !is.na(probab))
+tweets_college_town <- subset(tweets_college_town, probab<0.59)
+
+tweets_college_town[6:7] <- NULL
+tweets_college_town <- tbl_df(tweets_college_town)
+
+#eliminating noticeable companies
+company <- c("UMtransit", "countryrecruits", "dominos", "Coyote_Careers", "_ChampaignIL", "hucksbeerbuzz", "SwampHead", "tmj_il_vets", "_GainesvilleFL", "PlastipakJobs", "SBCAnnArbor", "AbraJewelry")  #SBCAnnArbor is acupuncture company
+for (i in company) {
+  tweets_college_town <- subset(tweets_college_town, user!=i)
+}
+
+#View(tweets_college_town)
+```
+
+
+```{r subset and prepare}
+library(quanteda)
+library(xtable)
+#slice dataset by location
+AnnArbor <- subset(tweets_college_town, location=="Ann Arbor, MI")
+Gainesville <- subset(tweets_college_town, location=="Gainesville, FL")
+CollegeStation <- subset(tweets_college_town, location=="College Station, TX")
+Champaign <- subset(tweets_college_town, location=="Champaign, IL")
+StateCollege <- subset(tweets_college_town, location=="State College, PA")
+Blacksburg <- subset(tweets_college_town, location=="Blacksburg, VA")
+
+#extract texts
+Atxt <- AnnArbor$text
+Btxt <- Blacksburg$text
+Ctxt <- Champaign$text
+CStxt <- CollegeStation$text
+Gtxt <- Gainesville$text
+Stxt <- StateCollege$text
+
+texts <- list(Atxt, Btxt, Ctxt, CStxt, Gtxt, Stxt)
+
+delete <- c("ann arbor", "college station", "arbor mi", "state college", "in gainesville", "station tx", "champaign il", "in champaign", "in college", "champaign illinois", "in ann", "gainesville fl", "gainesville florida", "in blacksburg", "blacksburg virginia", "arbor michigan", "college pa", "of illinois", "blacksburg va", "#annarbor", "ann", "arbor", "michigan", "gainesville", "florida", "college", "station", "texas", "champaign", "urbana", "illinois", "state", "pennsylvania", "blacksburg", "virginia", "#champaign", "hiring", "job", "#hiring", "#job", "tech", "#manufacturing", "#veterans", "#jobs", "#supplychain", "tweet", "est", "va", "fl", "tx", "fl", "il", "pa", "mi", "in")
+
+replace_reg <- c("https://t.co/", "http://", "&amp;", "&lt;", "&gt;", "RT", "https")
+
+rmNonAlphabet <- function(str) {
+  words <- unlist(strsplit(str, " "))
+  in.alphabet <- grep(words, pattern = "[a-z|0-9]", ignore.case = T)
+  nice.str <- paste(words[in.alphabet], collapse = " ")
+  nice.str
+}
+```
+
+
+```{r Ann}
+##Ann Arbor
+Atxt <- Atxt %>%
+  rmNonAlphabet()
+
+Ann <- tokens(Atxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+textstat_lexdiv(Ann)
+textstat_frequency(Ann)
+xtable(tbl_df(topfeatures(Ann)))
+textplot_network(Ann, min_freq = 3, omit_isolated = TRUE,
+  edge_color = "#1F78B4", edge_alpha = 0.5, edge_size = 2,
+  vertex_color = "#4D4D4D", vertex_size = 2, vertex_labelcolor = NULL,
+  offset = NULL, vertex_labelfont = NULL)
+```
+
+
+```{r Ann}
+##Ann Arbor
+Atxt <- Atxt %>%
+  rmNonAlphabet()
+
+Ann <- tokens(Atxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+textstat_lexdiv(Ann)
+textstat_frequency(Ann)
+xtable(tbl_df(topfeatures(Ann)))
+textplot_network(Ann, min_freq = 3, omit_isolated = TRUE,
+  edge_color = "#1F78B4", edge_alpha = 0.5, edge_size = 2,
+  vertex_color = "#4D4D4D", vertex_size = 2, vertex_labelcolor = NULL,
+  offset = NULL, vertex_labelfont = NULL)
+```
+
+
+```{r Ann}
+##Ann Arbor
+Atxt <- Atxt %>%
+  rmNonAlphabet()
+
+Ann <- tokens(Atxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+textstat_lexdiv(Ann)
+textstat_frequency(Ann)
+xtable(tbl_df(topfeatures(Ann)))
+```
+
+```{r Blacks}
+Btxt <- Btxt %>%
+  rmNonAlphabet()
+
+Black <- tokens(Btxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+xtable(tbl_df(topfeatures(Black)))
+```
+
+```{r Champaign}
+Ctxt <- Ctxt %>%
+  rmNonAlphabet()
+
+Cham <- tokens(Ctxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+xtable(tbl_df(topfeatures(Cham)))
+```
+
+```{r College Station}
+CStxt <- CStxt %>%
+  rmNonAlphabet()
+
+CS <- tokens(CStxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+xtable(tbl_df(topfeatures(CS)))
+```
+
+```{r Gainesville}
+Gtxt <- Gtxt %>%
+  rmNonAlphabet()
+
+Gaines <- tokens(Gtxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+xtable(tbl_df(topfeatures(Gaines)))
+```
+
+```{r State College}
+Stxt <- Stxt %>%
+  rmNonAlphabet()
+
+SC <- tokens(Stxt) %>%
+    tokens_remove("\\p{P}", valuetype = "regex", padding = TRUE) %>%
+    tokens_remove(stopwords("english"), padding  = TRUE) %>%
+    tokens_remove(delete, padding  = TRUE) %>%
+    tokens_remove(replace_reg, padding  = TRUE) %>%
+    tokens_ngrams(n = 2) %>%
+    dfm()
+
+xtable(tbl_df(topfeatures(SC)))
+#create one table for all college towns
+table <- tbl_df(matrix(c(1:10), ncol=1))
+list <- list(Ann, Black, Cham, CS, Gaines, SC)
+for (i in list){
+  i <- tbl_df(topfeatures(i))
+  i$word <- rownames(i)
+  i <- i[c(2,1)]
+  table <- cbind(table, i)
+}
+
+xtable(table)
+```
