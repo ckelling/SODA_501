@@ -118,7 +118,7 @@ regressionData$incomeD <- as.numeric(regressionData$incomeD2)
 regressionData$incomeO2 <- NULL
 regressionData$incomeD2 <- NULL
 glimpse(regressionData)
-save(regressionData, "Regression.RData")
+
 #gravity model
 regressionData$lincomeO <- log(regressionData$incomeO) #income and population need to be in the log form
 regressionData$lincomeD <- log(regressionData$incomeD)

@@ -50,7 +50,6 @@ save(user_locations_c2, file = "~/Desktop/paper/SODA501/project/user_locations_f
 
 Descriptives: users in each college towns
 ```{r}
-load("~/Desktop/paper/SODA501/project/user_locations_finalcleaned.Rdata")
 user_locations<-user_locations_c2
 towns<-c("Ithaca, NY", "State College, PA", "Bloomington, IN", "Lawrence, KS", "Blacksburg, VA", "College Station, TX", "Columbia, MO",
          "Champaign, IL", "Ann Arbor, MI", "Gainesville, FL")
@@ -88,7 +87,7 @@ xtable(Top_10_Locations_for_Travel_State_College)
 ##I would like to get rid of locations in the list that include: "State College, PA", "Pennsylvania, USA", "Park Forest Village, PA", "Bellefonte, PA", and "Boalsburg, PA" --> these places are too close (or too vague) to State College that I wouldn't consider as "traveling"
 #-> but maybe we need to discuss about this
 
-remove_places<-c("State College, PA")
+remove_places<-c("State College, PA", "Park Forest Village, PA",  "Boalsburg, PA")
 SCusers_locations_c<-SCusers_all_locations[! SCusers_all_locations%in% remove_places]
 
 SCusers_locations_c[grepl("USA",SCusers_locations_c)]
@@ -150,7 +149,7 @@ xtable(Top_10_Locations_for_Travel_Blacksburg)
 ##I would like to get rid of locations in the list that include: "State College, PA", "Pennsylvania, USA", "Park Forest Village, PA", "Bellefonte, PA", and "Boalsburg, PA" --> these places are too close (or too vague) to State College that I wouldn't consider as "traveling"
 #-> but maybe we need to diBLuss about this
 
-remove_places<-c("Blacksburg, VA")
+remove_places<-c("Christiansburg, VA")
 BLusers_locations_c<-BLusers_all_locations[! BLusers_all_locations%in% remove_places]
 
 BLusers_locations_c[grepl("USA",BLusers_locations_c)]
@@ -206,7 +205,7 @@ Top_10_Locations_for_Travel_CS<-t[1:10,]
 names(Top_10_Locations_for_Travel_CS)<-c("Top 10 locations for travelers to or from College Station", "Number of users")
 xtable(Top_10_Locations_for_Travel_CS)
 
-remove_places<-c("College Station, TX")
+remove_places<-c("Bryan, TX")
 CSusers_locations_c<-CSusers_all_locations[! CSusers_all_locations%in% remove_places]
 
 CSusers_locations_c[grepl("USA",CSusers_locations_c)]
@@ -245,221 +244,6 @@ t<-data.frame(sort(table(CS_states),decreasing = TRUE) )
 Top_10_States_for_Travel_CS<-t[1:10,]
 names(Top_10_States_for_Travel_CS)<-c("Top 10 states for travelers to or from College Station", "Number of users")
 xtable(Top_10_States_for_Travel_CS)
-
-
-```
-
-## Champaign, IL
-```{r}
-town<-"Champaign, IL"
-ILusers<-user_locations[grepl(town, user_locations$locations),]
-
-ILusers_all_locations<-c("")
-for(i in 1:151){
-  
-    ILusers_all_locations<-c(ILusers_all_locations, ILusers$locations[[i]])
-  
-}
-
-ILusers_all_locations<-ILusers_all_locations[-1]
-t<-data.frame(sort(table(ILusers_all_locations),decreasing = TRUE)) #so we can know the most frequent *places*
-Top_10_Locations_for_Travel_IL<-t[1:10,]
-names(Top_10_Locations_for_Travel_IL)<-c("Top 10 locations for travelers to or from College Station", "Number of users")
-xtable(Top_10_Locations_for_Travel_IL)
-
-remove_places<-c("Champaign, IL")
-ILusers_locations_c<-ILusers_all_locations[! ILusers_all_locations%in% remove_places]
-
-ILusers_locations_c[grepl("USA",ILusers_locations_c)]
-ILusers_locations_c<-gsub("Pennsylvania, USA", "Unknown, PA", ILusers_locations_c)
-ILusers_locations_c<-gsub("South Carolina, USA", "Unknown, SC", ILusers_locations_c)
-ILusers_locations_c<-gsub("Virginia, USA", "Unknown, VA", ILusers_locations_c)
-ILusers_locations_c<-gsub("North Carolina, USA", "Unknown, NC", ILusers_locations_c)
-ILusers_locations_c<-gsub("Alabama, USA", "Unknown, AL", ILusers_locations_c)
-ILusers_locations_c<-gsub("Florida, USA", "Unknown, FL", ILusers_locations_c)
-ILusers_locations_c<-gsub("Texas, USA", "Unknown, TX", ILusers_locations_c)
-ILusers_locations_c<-gsub("New Jersey, USA", "Unknown, NJ", ILusers_locations_c)
-ILusers_locations_c<-gsub("Oklahoma, USA", "Unknown, OK", ILusers_locations_c)
-ILusers_locations_c<-gsub("WiILonsin, USA", "Unknown, WI", ILusers_locations_c)
-ILusers_locations_c<-gsub("Illinois, USA", "Unknown, IL", ILusers_locations_c)
-ILusers_locations_c<-gsub("Indiana, USA", "Unknown, IN", ILusers_locations_c)
-ILusers_locations_c<-gsub("Arizona, USA", "Unknown, AZ", ILusers_locations_c)
-ILusers_locations_c<-gsub("Ohio, USA", "Unknown, OH", ILusers_locations_c)
-ILusers_locations_c<-gsub("New Hampshire, USA", "Unknown, NH", ILusers_locations_c)
-ILusers_locations_c<-gsub("California, USA", "Unknown, CA", ILusers_locations_c)
-ILusers_locations_c<-gsub("Maryland, USA", "Unknown, MD", ILusers_locations_c)
-ILusers_locations_c<-gsub("New York, USA", "Unknown, NY", ILusers_locations_c)
-ILusers_locations_c<-gsub("Colorado, USA", "Unknown, CO", ILusers_locations_c)
-ILusers_locations_c<-gsub("Iowa, USA", "Unknown, IA", ILusers_locations_c)
-ILusers_locations_c<-gsub("New Mexico, USA", "Unknown, NM", ILusers_locations_c)
-ILusers_locations_c<-gsub("Kansas, USA", "Unknown, KS", ILusers_locations_c)
-ILusers_locations_c<-gsub("Wyoming, USA", "Unknown, WY", ILusers_locations_c)
-ILusers_locations_c<-gsub("Nebraska, USA", "Unknown, NE", ILusers_locations_c)
-ILusers_locations_c<-gsub("Nevada, USA", "Unknown, NV", ILusers_locations_c)
-ILusers_locations_c<-gsub("Wisconsin, USA", "Unknown, WI", ILusers_locations_c)
-ILusers_locations_c<-gsub("Georgia, USA", "Unknown, GA", ILusers_locations_c)
-ILusers_locations_c<-gsub("Minnesota, USA", "Unknown, MN", ILusers_locations_c)
-sub("^[^,]*", "", ILusers_locations_c)
-
-
-
-IL_states<-substring(ILusers_locations_c, regexpr(",", ILusers_locations_c) + 2)
-
-t<-data.frame(sort(table(IL_states),decreasing = TRUE) )
-
-Top_10_States_for_Travel_IL<-t[1:10,]
-names(Top_10_States_for_Travel_IL)<-c("Top 10 states for travelers to or from Champaign", "Number of users")
-xtable(Top_10_States_for_Travel_IL)
-
-
-```
-## Ann Arbor, MI
-```{r}
-town<-"Ann Arbor, MI"
-Annusers<-user_locations[grepl(town, user_locations$locations),]
-
-Annusers_all_locations<-c("")
-for(i in 1:463){
-  
-    Annusers_all_locations<-c(Annusers_all_locations, Annusers$locations[[i]])
-  
-}
-
-Annusers_all_locations<-Annusers_all_locations[-1]
-t<-data.frame(sort(table(Annusers_all_locations),decreasing = TRUE)) #so we can know the most frequent *places*
-Top_10_Locations_for_Travel_Ann<-t[1:10,]
-names(Top_10_Locations_for_Travel_Ann)<-c("Top 10 locations for travelers to or from Ann Arbor", "Number of users")
-xtable(Top_10_Locations_for_Travel_Ann)
-
-remove_places<-c("Ann Arbor, MI")
-Annusers_locations_c<-Annusers_all_locations[! Annusers_all_locations%in% remove_places]
-
-Annusers_locations_c[grepl("USA",Annusers_locations_c)]
-Annusers_locations_c<-gsub("Pennsylvania, USA", "Unknown, PA", Annusers_locations_c)
-Annusers_locations_c<-gsub("South Carolina, USA", "Unknown, SC", Annusers_locations_c)
-Annusers_locations_c<-gsub("Virginia, USA", "Unknown, VA", Annusers_locations_c)
-Annusers_locations_c<-gsub("North Carolina, USA", "Unknown, NC", Annusers_locations_c)
-Annusers_locations_c<-gsub("Alabama, USA", "Unknown, AL", Annusers_locations_c)
-Annusers_locations_c<-gsub("Florida, USA", "Unknown, FL", Annusers_locations_c)
-Annusers_locations_c<-gsub("Texas, USA", "Unknown, TX", Annusers_locations_c)
-Annusers_locations_c<-gsub("New Jersey, USA", "Unknown, NJ", Annusers_locations_c)
-Annusers_locations_c<-gsub("Oklahoma, USA", "Unknown, OK", Annusers_locations_c)
-Annusers_locations_c<-gsub("Illinois, USA", "Unknown, IL", Annusers_locations_c)
-Annusers_locations_c<-gsub("Indiana, USA", "Unknown, IN", Annusers_locations_c)
-Annusers_locations_c<-gsub("Arizona, USA", "Unknown, AZ", Annusers_locations_c)
-Annusers_locations_c<-gsub("Ohio, USA", "Unknown, OH", Annusers_locations_c)
-Annusers_locations_c<-gsub("New Hampshire, USA", "Unknown, NH", Annusers_locations_c)
-Annusers_locations_c<-gsub("California, USA", "Unknown, CA", Annusers_locations_c)
-Annusers_locations_c<-gsub("Maryland, USA", "Unknown, MD", Annusers_locations_c)
-Annusers_locations_c<-gsub("New York, USA", "Unknown, NY", Annusers_locations_c)
-Annusers_locations_c<-gsub("Colorado, USA", "Unknown, CO", Annusers_locations_c)
-Annusers_locations_c<-gsub("Iowa, USA", "Unknown, IA", Annusers_locations_c)
-Annusers_locations_c<-gsub("New Mexico, USA", "Unknown, NM", Annusers_locations_c)
-Annusers_locations_c<-gsub("Kansas, USA", "Unknown, KS", Annusers_locations_c)
-Annusers_locations_c<-gsub("Wyoming, USA", "Unknown, WY", Annusers_locations_c)
-Annusers_locations_c<-gsub("Nebraska, USA", "Unknown, NE", Annusers_locations_c)
-Annusers_locations_c<-gsub("Nevada, USA", "Unknown, NV", Annusers_locations_c)
-Annusers_locations_c<-gsub("Wisconsin, USA", "Unknown, WI", Annusers_locations_c)
-Annusers_locations_c<-gsub("Georgia, USA", "Unknown, GA", Annusers_locations_c)
-Annusers_locations_c<-gsub("Minnesota, USA", "Unknown, MN", Annusers_locations_c)
-Annusers_locations_c<-gsub("Michigan, USA", "Unknown, MI", Annusers_locations_c)
-Annusers_locations_c<-gsub("Utah, USA", "Unknown, UT", Annusers_locations_c)
-Annusers_locations_c<-gsub("Tennessee, USA", "Unknown, TN", Annusers_locations_c)
-Annusers_locations_c<-gsub("Mississippi, USA", "Unknown, MS", Annusers_locations_c)
-Annusers_locations_c<-gsub("Vermont, USA", "Unknown, VT", Annusers_locations_c)
-Annusers_locations_c<-gsub("Washington, USA", "Unknown, WA", Annusers_locations_c)
-Annusers_locations_c<-gsub("Idaho, USA", "Unknown, ID", Annusers_locations_c)
-Annusers_locations_c<-gsub("Montana, USA", "Unknown, MT", Annusers_locations_c)
-Annusers_locations_c<-gsub("Kentucky, USA", "Unknown, KY", Annusers_locations_c)
-Annusers_locations_c<-gsub("Connecticut, USA", "Unknown, CT", Annusers_locations_c)
-sub("^[^,]*", "", Annusers_locations_c)
-
-
-
-Ann_states<-substring(Annusers_locations_c, regexpr(",", Annusers_locations_c) + 2)
-
-t<-data.frame(sort(table(Ann_states),decreasing = TRUE) )
-
-Top_10_States_for_Travel_Ann<-t[1:10,]
-names(Top_10_States_for_Travel_Ann)<-c("Top 10 states for travelers to or from Champaign", "Number of users")
-xtable(Top_10_States_for_Travel_Ann)
-
-
-```
-
-##Gainesville, FL
-```{r}
-town<-"Gainesville, FL"
-Gainusers<-user_locations[grepl(town, user_locations$locations),]
-
-Gainusers_all_locations<-c("")
-for(i in 1:328){
-  
-    Gainusers_all_locations<-c(Gainusers_all_locations, Gainusers$locations[[i]])
-  
-}
-
-Gainusers_all_locations<-Gainusers_all_locations[-1]
-t<-data.frame(sort(table(Gainusers_all_locations),decreasing = TRUE)) #so we can know the most frequent *places*
-Top_10_Locations_for_Travel_Gain<-t[1:10,]
-names(Top_10_Locations_for_Travel_Gain)<-c("Top 10 locations for travelers to or from Gain Arbor", "Number of users")
-xtable(Top_10_Locations_for_Travel_Gain)
-
-remove_places<-c("Gainesville, FL")
-Gainusers_locations_c<-Gainusers_all_locations[! Gainusers_all_locations%in% remove_places]
-
-Gainusers_locations_c[grepl("USA",Gainusers_locations_c)]
-Gainusers_locations_c<-gsub("Pennsylvania, USA", "Unknown, PA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("South Carolina, USA", "Unknown, SC", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Virginia, USA", "Unknown, VA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("North Carolina, USA", "Unknown, NC", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Alabama, USA", "Unknown, AL", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Florida, USA", "Unknown, FL", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Texas, USA", "Unknown, TX", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("New Jersey, USA", "Unknown, NJ", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Oklahoma, USA", "Unknown, OK", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Illinois, USA", "Unknown, IL", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Indiana, USA", "Unknown, IN", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Arizona, USA", "Unknown, AZ", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Ohio, USA", "Unknown, OH", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("New Hampshire, USA", "Unknown, NH", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("California, USA", "Unknown, CA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Maryland, USA", "Unknown, MD", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("New York, USA", "Unknown, NY", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Colorado, USA", "Unknown, CO", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Iowa, USA", "Unknown, IA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("New Mexico, USA", "Unknown, NM", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Kansas, USA", "Unknown, KS", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Wyoming, USA", "Unknown, WY", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Nebraska, USA", "Unknown, NE", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Nevada, USA", "Unknown, NV", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Wisconsin, USA", "Unknown, WI", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Georgia, USA", "Unknown, GA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Minnesota, USA", "Unknown, MN", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Michigan, USA", "Unknown, MI", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Utah, USA", "Unknown, UT", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Tennessee, USA", "Unknown, TN", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Mississippi, USA", "Unknown, MS", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Vermont, USA", "Unknown, VT", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Washington, USA", "Unknown, WA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Idaho, USA", "Unknown, ID", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Montana, USA", "Unknown, MT", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Kentucky, USA", "Unknown, KY", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Connecticut, USA", "Unknown, CT", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Arkansas, USA", "Unknown, AR", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Louisiana, USA", "Unknown, LA", Gainusers_locations_c)
-Gainusers_locations_c<-gsub("Oregon, USA", "Unknown, OR", Gainusers_locations_c)
-sub("^[^,]*", "", Gainusers_locations_c)
-
-
-
-Gain_states<-substring(Gainusers_locations_c, regexpr(",", Gainusers_locations_c) + 2)
-
-t<-data.frame(sort(table(Gain_states),decreasing = TRUE) )
-
-Top_10_States_for_Travel_Gain<-t[1:10,]
-names(Top_10_States_for_Travel_Gain)<-c("Top 10 states for travelers to or from Champaign", "Number of users")
-xtable(Top_10_States_for_Travel_Gain)
 
 
 ```

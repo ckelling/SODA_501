@@ -94,6 +94,3 @@ save(coll_city_user_tweets, file = "/storage/home/xbs5014/Downloads/coll_city_tw
 ```
 
 To run it on the whole dataset, just change the 'xja.txt' into the name of the whole data file
-
-
-

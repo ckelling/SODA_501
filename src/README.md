@@ -14,8 +14,8 @@ This file does the following tasks:
 * subsets the dataset by selecting all the tweets of the Twitter users selected above
 
 The input and output for this file are as follows:
-* **Input:** tweets_2015_dec_usa.txt
-* **Output:** coll_town_tweets.Rdata
+* **Input:**
+* **Output:**
 
 ## 02_data_exploration.R
 This file does the following tasks:
@@ -31,6 +31,7 @@ The input and output for this file are as follows:
     * comp_transp.png (editing the transparency)
     * perc_hist.png (first measure of trip progress)
 
+
 ## 03_botcheck.R
 This file does the following tasks:
 * reads the input twitter users
@@ -38,20 +39,19 @@ This file does the following tasks:
 * stores the probabilitie in a vector
 
 The input and output for this file are as follows:
-* **Input:** coll_town_users.Rdata
-* **Output:** bot probability per user
+* **Input:**
+* **Output:**
 
 ## 04_user_location_analysis.R
 This file does the following tasks:
 * selects unique different locations of each user and save the data
-* count numbers of unique different locations of each user
 * cleans bots (botcheck output>.59) and users who have traveled to more than 25 unique locations
 * computes descriptivs of each college town by aggregating the users
 * describes for each college town, the places (towns/cities and states) other than the specific town that users traveled to (or from)
 
 The input and output for this file are as follows:
-* **Input:** coll_town_tweets.Rdata, coll_town_users.Rdata, ProbabilityOfBot-final.Rdata
-* **Output:** user_locations.Rdata, user_locations_precleaned.Rdata, user_locations_botcleaned.Rdata, user_locations_finalcleaned
+* **Input:**
+* **Output:**
 
 ## 05_claire_location_analysis.R
 This file does the following tasks:
@@ -94,30 +94,3 @@ This files creates a network matrix and graph
 The input and output for this file are as follows:
 * **Input:** agg_elist.RData
 * **Output:** travel_igraph
-
-## 09_four_missing_towns.Rmd
-This file goes through the raw data to figure out why were have missing data (i.e., zero users) for four college towns.
-It does the following tasks:
-* selects all unique town/city locations from the raw data in MO, IN, KS, and NY
-
-The input and output for this file are as follows:
-* **Input:** tweets_2015_dec_usa.txt
-* **Output:** MOplaces.Rdata, INplaces.Rdata, KSplaces.Rdata, NYplaces.Rdata
-
-## 10_text_analysis.Rmd
-This files analyzes texts from tweets at uni-gram level
-* deletes stopwords and irrelevant words such as location names and state abbreviations
-* finds the most frequently co-occuring uni-grams overall and per college town
-
-The input and output for this file are as follows:
-* **Input:** coll_town_tweets.Rdata
-* **Output:** wordclouds and frequency tables
-
-## 11_text_analysis_bi-gram.Rmd
-This files analyzes texts from tweets at bi-gram level
-* deletes stopwords and irrelevant words such as location names and state abbreviations
-* finds the most frequently co-occuring bi-grams overall and per college town
-
-The input and output for this file are as follows:
-* **Input:** coll_town_tweets.Rdata
-* **Output:** wordclouds and frequency tables
